@@ -1,7 +1,7 @@
-// import { useStoreAdminAuth } from "@/stores/adminAuth";
+import { useStoreAdminAuth } from "@/stores/adminAuth";
 import Api from "@/axios/axios";
 import Toast from "@/components/lib/Toast";
-// const storeAdminAuth = useStoreAdminAuth();
+const storeAdminAuth = useStoreAdminAuth();
 
 // const dataAsli = computed(() => storeAdminAuth.getData);
 
@@ -18,8 +18,8 @@ const doLogin = async (
         if (token) {
             localStorage.setItem("token", token);
             localStorage.setItem("isLogin", true);
-            // storeAdminAuth.setToken(token);
-            // storeAdminAuth.setIsLogin(true);
+            storeAdminAuth.setToken(token);
+            storeAdminAuth.setIsLogin(true);
             // console.log("login berhasil");
             // console.log(response.message);
             Toast.success("Info", "Login berhasil!");

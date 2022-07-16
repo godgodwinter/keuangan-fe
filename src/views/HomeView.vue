@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { Form, Field } from "vee-validate";
-import NavBar from "@/components/template/landing/NavBar.vue";
 import fnValidasi from "@/components/lib/babengValidasi";
 import serviceAuth from "@/services/serviceAuth";
 import { useStoreAdminAuth } from "@/stores/adminAuth";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const storeAdminAuth = useStoreAdminAuth();
 
 const resLogin = ref(false);
@@ -13,21 +14,20 @@ const onSubmit = async (values: any) => {
   resLogin.value = await serviceAuth.doLogin(values.email, values.password);
   if (resLogin.value) {
     // console.log("login berhasil");
-    const token = localStorage.getItem("token")
-      ? localStorage.getItem("token")
-      : "";
-    const isLogin = localStorage.getItem("isLogin");
-    // console.log(token, isLogin);
+    // const token = localStorage.getItem("token")
+    //   ? localStorage.getItem("token")
+    //   : "";
+    // const isLogin = localStorage.getItem("isLogin");
+    // // console.log(token, isLogin);
 
-    storeAdminAuth.setToken(token);
-    storeAdminAuth.setIsLogin(true);
-    // router.push({ name: "AdminDashboard" });
+    // storeAdminAuth.setToken(token);
+    // storeAdminAuth.setIsLogin(true);
+    router.push({ name: "AdminDashboard" });
   }
 };
 </script>
 
 <template>
-  <NavBar></NavBar>
   <section
     class="w-full flex justify-center items-center flex-col bg-primary text-primary-content"
   >
@@ -48,18 +48,7 @@ const onSubmit = async (values: any) => {
                 <div class="hero-content flex-col lg:flex-row-reverse">
                   <div class="text-center lg:text-left">
                     <h1 class="text-5xl font-bold">
-                      Sistem Pencatatan Keuangan a
-                      <svg
-                        class="absolute text-black h-5 w-5"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                          clip-rule="evenodd"
-                        />
-                      </svg>
+                      Sistem Pencatatan Keuangan
                     </h1>
                     <!-- <p class="py-6">Masuk sebagai Administrator.</p> -->
                   </div>
@@ -112,14 +101,6 @@ const onSubmit = async (values: any) => {
       </div>
     </div>
   </section>
-
-  <footer
-    class="border-t-2 border-base-200 bg-base-100 h-32 flex flex-col gap-4 justify-center"
-  >
-    <div class="text-base-content text-center">
-      <span>© 2022 - Tim Dev</span>
-    </div>
-  </footer>
 </template>
 
 <style>

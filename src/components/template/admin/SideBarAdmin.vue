@@ -106,6 +106,108 @@ const doLogout = async (): Promise<void> => {
         >
       </li>
       <li :class="[pagesActive == 'profile' ? pagesActiveClass : '']">
+        <router-link :to="{ name: 'AdminDashboard' }">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <span class="ml-3">Profile </span></router-link
+        >
+      </li>
+      <li :class="[pagesActive == 'user' ? pagesActiveClass : '']">
+        <router-link :to="{ name: 'AdminDashboard' }">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <span class="ml-3">User </span></router-link
+        >
+      </li>
+      <li :class="[pagesActive == 'kategori' ? pagesActiveClass : '']">
+        <router-link :to="{ name: 'AdminDashboard' }">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <span class="ml-3">Kategori </span></router-link
+        >
+      </li>
+      <li :class="[pagesActive == 'pemasukan' ? pagesActiveClass : '']">
+        <router-link :to="{ name: 'AdminDashboard' }">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <span class="ml-3">Pemasukan </span></router-link
+        >
+      </li>
+      <li :class="[pagesActive == 'pengeluaran' ? pagesActiveClass : '']">
+        <router-link :to="{ name: 'AdminDashboard' }">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <span class="ml-3">Pengeluaran </span></router-link
+        >
+      </li>
+      <li :class="[pagesActive == 'saldo' ? pagesActiveClass : '']">
+        <router-link :to="{ name: 'AdminDashboard' }">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          <span class="ml-3">Saldo </span></router-link
+        >
+      </li>
+      <!-- <li :class="[pagesActive == 'profile' ? pagesActiveClass : '']">
         <router-link :to="{ name: 'AdminProfile' }">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -242,7 +344,7 @@ const doLogout = async (): Promise<void> => {
           </svg>
           <span class="ml-3">Images </span></router-link
         >
-      </li>
+      </li> -->
     </ul>
   </div>
 </template>
