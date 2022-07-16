@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import NavBar from "@/components/template/admin/AdminNavBar.vue";
 import { computed, ref } from "vue";
 import Footer from "@/components/template/CFooter.vue";
 import ThemeBar from "@/components/template/ThemeBar.vue";
@@ -40,27 +41,19 @@ if (token.value) {
 }
 </script>
 <template>
+  <NavBar />
   <!-- <ScrollToTop /> -->
   <!-- <ThemeBar /> -->
-  <div class="border-b-2 top-0 lg:top-0 relative">
+  <div class="border-b-2 top-12 lg:top-12 relative">
     <div class="drawer drawer-mobile">
       <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
       <div class="drawer-content">
         <!-- Page content here -->
         <!-- mobile ONLY -->
-        <div
+        <!-- <div
           class="w-full flex justify-between px-4 py-4 bg-base-200 shadow-md space-x-4"
         >
           <div class="flex space-x-2">
-            <!-- <div>
-            <router-link :to="{ name: 'LandingIndex' }">
-              <h1
-                class="text-base-content font-bold py-2 pt-6 uppercase underline italic underline-offset-2"
-              >
-                Landing Pages
-              </h1>
-            </router-link>
-          </div> -->
             <div>
               <router-link :to="{ name: 'AdminDashboard' }">
                 <h1
@@ -134,7 +127,7 @@ if (token.value) {
                 /></svg
             ></label>
           </div>
-        </div>
+        </div> -->
         <!-- mobile ONLY -->
 
         <main class="font-serif md:min-h-screen py-12 px-2 lg:px-4 lg:py-10">

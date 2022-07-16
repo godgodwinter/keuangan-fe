@@ -94,24 +94,6 @@ const doEditData = async (id: number, index: number) => {};
       </div>
     </div>
   </div>
-  <!-- <div class="w-full py-4 px-2 flex justify-center">
-    <div class="stats shadow">
-      <div class="stat place-items-center">
-        <div class="stat-title">Pemasukan</div>
-        <div class="stat-value">800.000</div>
-      </div>
-
-      <div class="stat place-items-center">
-        <div class="stat-title">Pengeluaran</div>
-        <div class="stat-value text-secondary">440.000</div>
-      </div>
-
-      <div class="stat place-items-center">
-        <div class="stat-title">Saldo</div>
-        <div class="stat-value">360.000</div>
-      </div>
-    </div>
-  </div> -->
 
   <div class="w-full py-4 flex-col justify-center px-4 space-y-4 shadow-md">
     <!-- head -->
@@ -135,17 +117,17 @@ const doEditData = async (id: number, index: number) => {};
       <div class="border-r-2 px-2">
         <span>Baju baru test text panjang abcdefg</span>
       </div>
-      <div class="text-right text-red-600">Rp 100.000</div>
+      <div class="text-right text-red-600 hover:underline">Rp 100.000</div>
     </div>
     <div class="grid grid-cols-3 w-full">
       <div class="grid-cols-1 border-r-2"><span>Gaji</span></div>
       <div class="border-r-2 px-2"><span>-</span></div>
-      <div class="text-right text-sky-600">Rp 400.000</div>
+      <div class="text-right text-sky-600 hover:underline">Rp 400.000</div>
     </div>
     <div class="grid grid-cols-3 w-full">
       <div class="grid-cols-1 border-r-2"><span>Makanan</span></div>
       <div class="border-r-2 px-2"><span>-</span></div>
-      <div class="text-right text-red-600">Rp 400.000</div>
+      <div class="text-right text-red-600 hover:underline">Rp 400.000</div>
     </div>
     <!-- content -->
   </div>
