@@ -3,6 +3,27 @@ import { ref, computed } from "vue";
 import { Form, Field } from "vee-validate";
 import NavBar from "@/components/template/landing/NavBar.vue";
 import fnValidasi from "@/components/lib/babengValidasi";
+import serviceAuth from "@/services/serviceAuth";
+import { useStoreAdminAuth } from "@/stores/adminAuth";
+const storeAdminAuth = useStoreAdminAuth();
+
+const resLogin = ref(false);
+const onSubmit = async (values: any) => {
+  // console.log(values.email, values.password);
+  resLogin.value = await serviceAuth.doLogin(values.email, values.password);
+  if (resLogin.value) {
+    // console.log("login berhasil");
+    const token = localStorage.getItem("token")
+      ? localStorage.getItem("token")
+      : "";
+    const isLogin = localStorage.getItem("isLogin");
+    // console.log(token, isLogin);
+
+    storeAdminAuth.setToken(token);
+    storeAdminAuth.setIsLogin(true);
+    // router.push({ name: "AdminDashboard" });
+  }
+};
 </script>
 
 <template>
@@ -27,9 +48,20 @@ import fnValidasi from "@/components/lib/babengValidasi";
                 <div class="hero-content flex-col lg:flex-row-reverse">
                   <div class="text-center lg:text-left">
                     <h1 class="text-5xl font-bold">
-                      Sistem Pencatatan Keuangan
+                      Sistem Pencatatan Keuangan a
+                      <svg
+                        class="absolute text-black h-5 w-5"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
                     </h1>
-                    <p class="py-6">Masuk sebagai Administrator.</p>
+                    <!-- <p class="py-6">Masuk sebagai Administrator.</p> -->
                   </div>
                   <div
                     class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100"

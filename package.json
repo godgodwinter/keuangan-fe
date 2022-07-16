@@ -11,10 +11,15 @@
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.2",
+    "aos": "^2.3.4",
+    "axios": "^0.27.2",
     "daisyui": "^2.18.1",
+    "moment": "^2.29.4",
+    "mosha-vue-toastify": "^1.0.23",
     "pinia": "^2.0.14",
     "vee-validate": "^4.6.1",
     "vue": "^3.2.37",
+    "vue-good-table-next": "^0.2.1",
     "vue-router": "^4.0.16"
   },
   "devDependencies": {

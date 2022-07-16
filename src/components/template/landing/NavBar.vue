@@ -22,7 +22,7 @@ window.addEventListener("scroll", onScroll);
       class="fixed z-50 font-serif font-semibold text-sm py-2 text-center px-4 w-full"
       :class="{
         'bg-base-content border-b border-none text-base-100  ': windowTop > 10,
-        'border-b text-primary-content border-white border-opacity-40':
+        'bg-base-content bg-opacity-20 border-b text-primary-content border-white border-opacity-40':
           windowTop < 10,
       }"
     >
@@ -34,11 +34,7 @@ window.addEventListener("scroll", onScroll);
         >
           Home
         </button>
-        <button
-          class="font-normal text-sm hover:link my-1 block capitalize px-4 border-r last:border-none"
-        >
-          Login
-        </button>
+
         <button
           v-if="theme == 'cupcake'"
           @click="doUpdateTheme('dark')"
