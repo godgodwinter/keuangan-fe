@@ -76,7 +76,7 @@ const doEditData = async (id: number, index: number) => {};
     </div>
   </div>
 
-  <div class="w-full py-4 px-2 flex justify-center shadow">
+  <div class="w-full py-6 px-2 flex justify-center shadow">
     <div class="grid grid-cols-3 w-full text-center">
       <div>
         <div class="font-bold">Pemasukan</div>

@@ -14,6 +14,11 @@ const AdminRoutes: Array<any> = [
                 name: 'AdminDashboardIndex',
                 component: () => import("@/views/admin/DashboardIndex.vue"),
             },
+            {
+                path: `${prefix}transaksi/tambah`,
+                name: 'AdminTransaksiTambah',
+                component: () => import("@/views/admin/transaksi/TambahTransaksi.vue"),
+            },
         ],
     },
 ];

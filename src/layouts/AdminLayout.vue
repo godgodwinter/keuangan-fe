@@ -71,7 +71,7 @@ if (token.value) {
               </router-link>
             </div>
             <div>
-              <router-link :to="{ name: 'AdminDashboard' }">
+              <router-link :to="{ name: 'AdminTransaksiTambah' }">
                 <h1
                   class="text-base-content font-bold py-2 pt-6 uppercase underline italic underline-offset-2"
                 >
