@@ -10,7 +10,7 @@ const doLogin = async (
     password: string
 ): Promise<boolean | undefined> => {
     try {
-        const response = await Api.post(`auth/login`, {
+        const response = await Api.post(`admin/auth/login`, {
             username: email,
             password,
         });
@@ -37,7 +37,7 @@ const doLogin = async (
 
 const doCheckToken = async (token: string): Promise<boolean | undefined> => {
     try {
-        const response = await Api.post(`auth/profile`, {
+        const response = await Api.post(`admin/auth/profile`, {
             token: token,
         });
         // console.log(response.hasOwnProperty("data"));
@@ -45,10 +45,11 @@ const doCheckToken = async (token: string): Promise<boolean | undefined> => {
             const newToken = response.data.newToken;
             localStorage.setItem("token", newToken);
             storeAdminAuth.setToken(newToken);
+            // console.log(response.data.me.nama);
 
             const dataMe = {
                 id: response.data.me.id,
-                name: response.data.me.name,
+                name: response.data.me.nama,
             };
             storeAdminAuth.setMe(dataMe);
             // console.log(dataMe);

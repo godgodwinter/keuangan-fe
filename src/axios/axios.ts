@@ -6,7 +6,7 @@ const BASE_URL = import.meta.env.VITE_API_URL
   : "http://localhost:8000/";
 // Create a instance of axios to use the same base url.
 const axiosAPI = axios.create({
-  baseURL: `${BASE_URL}api/v1/`, // it's not recommended to have this info here.
+  baseURL: `${BASE_URL}api/`, // it's not recommended to have this info here.
 });
 
 // implement a method to execute all the request from here.
