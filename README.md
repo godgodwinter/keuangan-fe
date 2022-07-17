@@ -31,17 +31,23 @@ npm run lint
 ## Screenshots
 [![Transaksi Desktop 1][ss-transaksi-lg-1]](https://github.com/godgodwinter)
 [![Transaksi Mobile 1][ss-transaksi-sm-1]](https://github.com/godgodwinter)
-[ss-transaksi-lg-1]: ss/transaksi-lg-1.png
-[ss-transaksi-sm-1]: ss/transaksi-sm-1.png
+
+![TRANSAKSI DESKTOP 1!](/ss/transaksi-lg-1.png "TRANSAKSI DESKTOP 1")
 
 
 [![Transaksi Tambah Desktop 1][ss-transaksi-tambah-1]](https://github.com/godgodwinter)
 [![Transaksi Tambah Mobile 1][ss-transaksi-tambah-sm-1]](https://github.com/godgodwinter)
-[ss-transaksi-tambah-1]: ss/transaksi-tambah-1.png
-[ss-transaksi-tambah-sm-1]: ss/transaksi-tambah-sm-1.png
 
 [![Kategori Desktop 1][ss-kategori-lg-1]](https://github.com/godgodwinter)
 [![Kategori Mobile 1][ss-kategori-sm-1]](https://github.com/godgodwinter)
+
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[ss-transaksi-lg-1]: ss/transaksi-lg-1.png
+[ss-transaksi-sm-1]: ss/transaksi-sm-1.png
+[ss-transaksi-tambah-1]: ss/transaksi-tambah-1.png
+[ss-transaksi-tambah-sm-1]: ss/transaksi-tambah-sm-1.png
 [ss-kategori-lg-1]: ss/kategori-lg-1.png
 [ss-kategori-sm-1]: ss/kategori-sm-1.png
 
