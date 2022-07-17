@@ -30,13 +30,13 @@ window.addEventListener("scroll", onScroll);
         class="flex lg:justify-center px-10 mx-4 overflow-hidden w-full justify-center"
       >
         <router-link
-          :to="{ name: 'AdminDashboard' }"
+          :to="{ name: 'AdminTransaksi' }"
           class="py-2 border-r inline-block border-r-white last:border-none"
         >
           <button
             class="font-normal text-sm hover:link my-1 block capitalize px-4 border-r inline-block border-r-white last:border-none leading-tight"
           >
-            Dashboard
+            Transaksi
           </button></router-link
         >
         <router-link

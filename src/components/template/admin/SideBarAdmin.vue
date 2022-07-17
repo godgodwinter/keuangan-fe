@@ -106,7 +106,7 @@ const doLogout = async (): Promise<void> => {
         >
       </li>
       <li :class="[pagesActive == 'profile' ? pagesActiveClass : '']">
-        <router-link :to="{ name: 'AdminDashboard' }">
+        <router-link :to="{ name: 'AdminProfile' }">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5"
@@ -123,7 +123,7 @@ const doLogout = async (): Promise<void> => {
         >
       </li>
       <li :class="[pagesActive == 'user' ? pagesActiveClass : '']">
-        <router-link :to="{ name: 'AdminDashboard' }">
+        <router-link :to="{ name: 'AdminUser' }">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5"
@@ -132,7 +132,7 @@ const doLogout = async (): Promise<void> => {
           >
             <path
               fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z"
               clip-rule="evenodd"
             />
           </svg>
@@ -140,7 +140,7 @@ const doLogout = async (): Promise<void> => {
         >
       </li>
       <li :class="[pagesActive == 'kategori' ? pagesActiveClass : '']">
-        <router-link :to="{ name: 'AdminDashboard' }">
+        <router-link :to="{ name: 'AdminKategori' }">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-5 w-5"
@@ -149,14 +149,29 @@ const doLogout = async (): Promise<void> => {
           >
             <path
               fill-rule="evenodd"
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z"
+              d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z"
               clip-rule="evenodd"
             />
           </svg>
           <span class="ml-3">Kategori </span></router-link
         >
       </li>
-      <li :class="[pagesActive == 'pemasukan' ? pagesActiveClass : '']">
+      <li :class="[pagesActive == 'transaksi' ? pagesActiveClass : '']">
+        <router-link :to="{ name: 'AdminTransaksi' }">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              d="M8 5a1 1 0 100 2h5.586l-1.293 1.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L13.586 5H8zM12 15a1 1 0 100-2H6.414l1.293-1.293a1 1 0 10-1.414-1.414l-3 3a1 1 0 000 1.414l3 3a1 1 0 001.414-1.414L6.414 15H12z"
+            />
+          </svg>
+          <span class="ml-3">Transaksi </span></router-link
+        >
+      </li>
+      <!-- <li :class="[pagesActive == 'pemasukan' ? pagesActiveClass : '']">
         <router-link :to="{ name: 'AdminDashboard' }">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -189,8 +204,8 @@ const doLogout = async (): Promise<void> => {
           </svg>
           <span class="ml-3">Pengeluaran </span></router-link
         >
-      </li>
-      <li :class="[pagesActive == 'saldo' ? pagesActiveClass : '']">
+      </li> -->
+      <!-- <li :class="[pagesActive == 'saldo' ? pagesActiveClass : '']">
         <router-link :to="{ name: 'AdminDashboard' }">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -206,7 +221,7 @@ const doLogout = async (): Promise<void> => {
           </svg>
           <span class="ml-3">Saldo </span></router-link
         >
-      </li>
+      </li> -->
       <!-- <li :class="[pagesActive == 'profile' ? pagesActiveClass : '']">
         <router-link :to="{ name: 'AdminProfile' }">
           <svg
