@@ -30,16 +30,16 @@ npm run lint
 
 ## Screenshots
 [![Transaksi Desktop 1][ss-transaksi-lg-1]](https://github.com/godgodwinter)
-[![Transaksi Mobile 1][ss-transaksi-sm-1]](https://github.com/godgodwinter)
+[![Transaksi Mobile 1][ss-transaksi-sm-1]]
 
-![TRANSAKSI DESKTOP 1!](/ss/transaksi-lg-1.png "TRANSAKSI DESKTOP 1")
+<!-- ![TRANSAKSI DESKTOP 1!](/ss/transaksi-lg-1.png "TRANSAKSI DESKTOP 1") -->
 
 
-[![Transaksi Tambah Desktop 1][ss-transaksi-tambah-1]](https://github.com/godgodwinter)
-[![Transaksi Tambah Mobile 1][ss-transaksi-tambah-sm-1]](https://github.com/godgodwinter)
+[![Transaksi Tambah Desktop 1][ss-transaksi-tambah-1]]
+[![Transaksi Tambah Mobile 1][ss-transaksi-tambah-sm-1]]
 
-[![Kategori Desktop 1][ss-kategori-lg-1]](https://github.com/godgodwinter)
-[![Kategori Mobile 1][ss-kategori-sm-1]](https://github.com/godgodwinter)
+[![Kategori Desktop 1][ss-kategori-lg-1]]
+[![Kategori Mobile 1][ss-kategori-sm-1]]
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
