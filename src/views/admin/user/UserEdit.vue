@@ -6,21 +6,39 @@ import { Form, Field } from "vee-validate";
 import fnValidasi from "@/components/lib/babengValidasi";
 import { useRouter, useRoute } from "vue-router";
 import Toast from "@/components/lib/Toast";
+import { useStoreDataUsers } from "@/stores/data/dataUsers";
 const router = useRouter();
 const route = useRoute();
+
+const id = route.params.id;
+
+const storeDataUsers = useStoreDataUsers();
 const storeAdmin = useStoreAdmin();
-storeAdmin.setPagesActive("kategori");
+storeAdmin.setPagesActive("user");
+storeDataUsers.$subscribe((mutation, state) => {});
 interface IData {
   id: number;
   name: string;
 }
 const data: Ref<IData[]> = ref([]);
 const dataForm: Ref<string[]> = ref([]);
+const resData = ref(null);
+const getDataId = async (): Promise<void> => {
+  resData.value = await ApiUsers.getDataId(id);
+  if (resData.value) {
+    dataForm.value = resData.value;
+  } else {
+    Toast.warning("Info", "Data tidak ditemukan");
+    router.push({ name: "AdminUser" });
+  }
+};
+getDataId();
+
 const doSubmit = async (values: any): Promise<void> => {
   // console.log(values);
-  const resSubmit = await ApiUsers.doStoreData(values);
+  let resSubmit = await ApiUsers.doUpdate(id, values);
   if (resSubmit) {
-    Toast.success("Info", "Data berhasil ditambahkan!");
+    Toast.success("Info", "Data berhasil diupdate!");
     router.push({ name: "AdminUser" });
   }
 };
@@ -29,27 +47,30 @@ const babengErrors = ref([]);
 
 const onSubmit = async (values: any): Promise<void> => {
   // console.log(values);
-  // if (
-  //   (values.password != undefined && values.password != "") ||
-  //   (values.password2 != undefined && values.password2 != "")
-  // ) {
-  if (values.password2 == values.password) {
-    if (values.password.length < 3) {
-      babengErrors.value.password = "Password minimal 3 karakter";
+  if (
+    (values.password != undefined && values.password != "") ||
+    (values.password2 != undefined && values.password2 != "")
+  ) {
+    if (values.password2 == values.password) {
+      if (values.password.length < 3) {
+        babengErrors.value.password = "Password minimal 3 karakter";
+      } else {
+        babengErrors.value.password = null;
+        doSubmit(values);
+      }
     } else {
-      babengErrors.value.password = null;
-      doSubmit(values);
+      babengErrors.value.password = "Password tidak sama";
+      Toast.warning(
+        "Warning",
+        "Konfirmasi password tidak sama! Periksa kembali"
+      );
     }
   } else {
-    babengErrors.value.password = "Password tidak sama";
-    Toast.warning("Warning", "Konfirmasi password tidak sama! Periksa kembali");
+    babengErrors.value.password = null;
+    values.password = null;
+    values.password2 = null;
+    doSubmit(values);
   }
-  // } else {
-  //   babengErrors.value.password = null;
-  //   values.password = null;
-  //   values.password2 = null;
-  //   doSubmit(values);
-  // }
 };
 </script>
 <template>
@@ -58,7 +79,7 @@ const onSubmit = async (values: any): Promise<void> => {
       <span
         class="text-2xl sm:text-3xl leading-none font-bold text-base-content shadow-sm"
       >
-        Tambah User
+        Tambah Edit
       </span>
     </div>
     <div class="md:py-0 py-4 space-x-2 space-y-2">

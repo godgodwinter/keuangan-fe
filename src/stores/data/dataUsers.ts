@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 
-export const useStoreDataSkills = defineStore({
-  id: 'storeDataSkills',
+export const useStoreDataUsers = defineStore({
+  id: 'storeDataUsers',
   state: () => ({
     data: []
   }),

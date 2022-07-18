@@ -30,6 +30,11 @@ const AdminRoutes: Array<any> = [
                 component: () => import("@/views/admin/user/UserTambah.vue"),
             },
             {
+                path: `${prefix}user/edit/:id`,
+                name: 'AdminUserEdit',
+                component: () => import("@/views/admin/user/UserEdit.vue"),
+            },
+            {
                 path: `${prefix}kategori`,
                 name: 'AdminKategori',
                 component: () => import("@/views/admin/kategori/KategoriIndex.vue"),

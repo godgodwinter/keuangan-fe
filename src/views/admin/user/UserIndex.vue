@@ -1,9 +1,21 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import ApiUsers from "@/services/api/apiUsers";
+import { useStoreDataUsers } from "@/stores/data/dataUsers";
+import { ref, computed } from "vue";
 import { useStoreAdmin } from "@/stores/admin";
 import Toast from "@/components/lib/Toast";
+import { useRouter, useRoute } from "vue-router";
+const router = useRouter();
+const route = useRoute();
 const storeAdmin = useStoreAdmin();
 storeAdmin.setPagesActive("user");
+
+const storeDataUsers = useStoreDataUsers();
+const dataAsli = computed(() => storeDataUsers.getData);
+storeDataUsers.$subscribe((mutation, state) => {
+  // console.log(mutation, state);
+  data.value = dataAsli.value;
+});
 interface IData {
   id: number;
   name: string;
@@ -13,8 +25,8 @@ interface IData {
 const dataExample = [
   {
     id: 1,
-    name: "John Doe",
-    username: "john",
+    nama: "John Doe",
+    usernama: "john",
     transaksi: 5,
   },
   {
@@ -25,7 +37,12 @@ const dataExample = [
   },
 ];
 const data: Ref<IData[]> = ref([]);
-data.value = dataExample;
+// data.value = dataExample;
+
+data.value = dataAsli.value;
+if (dataAsli.value.length < 1) {
+  ApiUsers.getData();
+}
 const columns = [
   {
     label: "Actions",
@@ -37,7 +54,7 @@ const columns = [
   },
   {
     label: "Nama",
-    field: "name",
+    field: "nama",
     type: "String",
   },
   {
@@ -54,7 +71,7 @@ const columns = [
 
 const doRefreshData = () => {
   if (confirm("Apakah anda yakin menghapus data ini?")) {
-    // ApiSkills.getData();
+    ApiUsers.getData();
     Toast.success("Info", "Refresh Data!");
   }
 };
@@ -62,16 +79,19 @@ const doRefreshData = () => {
 const doDeleteData = async (id: number, index: number): Promise<Response> => {
   if (confirm("Apakah anda yakin menghapus data ini?")) {
     // data.value.splice(index, 1);
-    // let resDelete = await ApiSkills.deleteData(id);
-    // if (resDelete) {
-    Toast.success("Info", "Hapus Data!");
-    //   ApiSkills.getData();
-    // }
+    const resDelete = await ApiUsers.deleteData(id);
+    if (resDelete) {
+      Toast.success("Info", "Data berhasil dihapus!");
+      // ApiKategori.getData();
+    }
   }
 };
 
 const doEditData = async (id: number, index: number) => {
-  Toast.success("Info", "Edit Data!");
+  router.push({
+    name: "AdminUserEdit",
+    params: { id: id },
+  });
 };
 </script>
 <template>
