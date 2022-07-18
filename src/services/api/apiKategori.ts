@@ -1,15 +1,15 @@
 import Api from "@/axios/axios";
-import { useStoreDataSkills } from "@/stores/data/dataSkills";
+import { useStoreDataKategori } from "@/stores/data/dataKategori";
 import { computed } from "vue";
-const storeDataSkills = useStoreDataSkills();
+const storeDataKategori = useStoreDataKategori();
 
-const dataAsli = computed(() => storeDataSkills.getData);
+const dataAsli = computed(() => storeDataKategori.getData);
 
 const getData = async () => {
     try {
-        const response = await Api.get(`skill`);
+        const response = await Api.get(`admin/kategori`);
         let res = response.data;
-        storeDataSkills.setData(res);
+        storeDataKategori.setData(res);
         // console.log(res);
 
         return true;
@@ -20,17 +20,16 @@ const getData = async () => {
 
 const doStoreData = async (data: any[]) => {
     let dataForm = {
-        name: data.name,
-        score: data.score,
-        parrent_id: 1
+        nama: data.nama,
+        jenis: data.jenis
     }
     try {
-        const response = await Api.post(`skill`, dataForm);
-        data.id = response.data;
+        const response = await Api.post(`admin/kategori`, dataForm);
+        data.id = response.id;
         dataAsli.value.push(data);
 
         // getData()
-        // console.log(data);
+        // console.log(dataAsli.value);
 
         return true;
     } catch (error) {
@@ -44,7 +43,7 @@ const getDataId = async (id: number): Promise<any> => {
         if (dataAsli.value.length < 1) {
             await getData();
         }
-        const response = await Api.get(`skill/${id}`);
+        const response = await Api.get(`admin/kategori/${id}`);
         let res = response.data;
         // let res = dataAsli.value.filter((item) => item.id == id);
         // console.log(res.id, dataAsli.value, id);
@@ -56,20 +55,19 @@ const getDataId = async (id: number): Promise<any> => {
 
 const doUpdate = async (id: number, data: any[]): Promise<boolean> => {
     let dataForm = {
-        name: data.name,
-        score: data.score,
-        parrent_id: 1
+        nama: data.nama,
+        jenis: data.jenis
     }
     try {
         if (dataAsli.value.length < 1) {
             await getData();
         }
-        const response = await Api.put(`skill/${id}`, dataForm);
+        const response = await Api.put(`admin/kategori/${id}`, dataForm);
         // update data
         let dataUpdate = dataAsli.value.filter((item) => item.id == id);
-        dataUpdate[0].name = data.name;
-        dataUpdate[0].score = data.score;
-        storeDataSkills.setData(dataAsli.value);
+        dataUpdate[0].nama = data.nama;
+        dataUpdate[0].jenis = data.jenis;
+        storeDataKategori.setData(dataAsli.value);
         return true;
     } catch (error) {
         console.error(error);
@@ -78,20 +76,20 @@ const doUpdate = async (id: number, data: any[]): Promise<boolean> => {
 
 const deleteData = async (id: number) => {
     try {
-        const response = await Api.delete(`skill/${id}`);
+        const response = await Api.delete(`admin/kategori/${id}`);
         let data = dataAsli.value.filter((item) => item.id !== id);
-        storeDataSkills.setData(data);
+        storeDataKategori.setData(data);
         return true;
     } catch (error) {
         console.error(error);
     }
 };
 
-const ApiSkills = {
+const ApiKategori = {
     getData,
     deleteData,
     getDataId,
     doUpdate,
     doStoreData
 };
-export default ApiSkills;
+export default ApiKategori;

@@ -6,10 +6,12 @@ import { Form, Field } from "vee-validate";
 import fnValidasi from "@/components/lib/babengValidasi";
 import { useRouter, useRoute } from "vue-router";
 import Toast from "@/components/lib/Toast";
+import { useStoreDataKategori } from "@/stores/data/dataKategori";
 const router = useRouter();
 const route = useRoute();
-const jenis = route.params.jenis;
+const id = route.params.id;
 
+const storeDataKategori = useStoreDataKategori();
 const storeAdmin = useStoreAdmin();
 storeAdmin.setPagesActive("kategori");
 interface IData {
@@ -18,13 +20,25 @@ interface IData {
 }
 const data: Ref<IData[]> = ref([]);
 const dataForm: Ref<string[]> = ref([]);
-dataForm.value.jenis = jenis ? jenis : "Pemasukan";
+storeDataKategori.$subscribe((mutation, state) => {});
+
+const resData = ref(null);
+const getDataId = async (): Promise<void> => {
+  resData.value = await ApiKategori.getDataId(id);
+  if (resData.value) {
+    dataForm.value = resData.value;
+  } else {
+    Toast.warning("Info", "Data tidak ditemukan");
+    router.push({ name: "AdminKategori" });
+  }
+};
+getDataId();
 
 const onSubmit = async (values: any): Promise<void> => {
   // console.log(values);
-  const resSubmit = await ApiKategori.doStoreData(values);
+  let resSubmit = await ApiKategori.doUpdate(id, values);
   if (resSubmit) {
-    Toast.success("Info", "Data berhasil ditambahkan!");
+    Toast.success("Info", "Data berhasil diupdate!");
     router.push({ name: "AdminKategori" });
   }
 };
@@ -35,7 +49,7 @@ const onSubmit = async (values: any): Promise<void> => {
       <span
         class="text-2xl sm:text-3xl leading-none font-bold text-base-content shadow-sm"
       >
-        Tambah Kategori
+        Edit Kategori
       </span>
     </div>
     <div class="md:py-0 py-4 space-x-2 space-y-2">

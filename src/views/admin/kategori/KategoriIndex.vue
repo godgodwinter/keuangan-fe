@@ -1,33 +1,50 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import ApiKategori from "@/services/api/apiKategori";
+import { ref, computed } from "vue";
 import { useStoreAdmin } from "@/stores/admin";
 import Toast from "@/components/lib/Toast";
+import { useStoreDataKategori } from "@/stores/data/dataKategori";
+import { useRouter, useRoute } from "vue-router";
+const router = useRouter();
+const route = useRoute();
 const storeAdmin = useStoreAdmin();
 storeAdmin.setPagesActive("kategori");
+
+const storeDataKategori = useStoreDataKategori();
+const dataAsli = computed(() => storeDataKategori.getData);
+storeDataKategori.$subscribe((mutation, state) => {
+  // console.log(mutation, state);
+  data.value = dataAsli.value;
+});
+
 interface IData {
   id: number;
-  name: string;
+  nama: string;
   jenis: string;
 }
 const dataExample = [
   {
     id: 1,
-    name: "Kategori 1",
+    nama: "Kategori 1",
     jenis: "Pemasukan",
   },
   {
     id: 2,
-    name: "Kategori 2",
+    nama: "Kategori 2",
     jenis: "Pemasukan",
   },
   {
     id: 3,
-    name: "Kategori 3",
+    nama: "Kategori 3",
     jenis: "Pengeluaran",
   },
 ];
 const data: Ref<IData[]> = ref([]);
-data.value = dataExample;
+// data.value = dataExample;
+data.value = dataAsli.value;
+if (dataAsli.value.length < 1) {
+  ApiKategori.getData();
+}
 const columns = [
   {
     label: "Actions",
@@ -39,7 +56,7 @@ const columns = [
   },
   {
     label: "Nama",
-    field: "name",
+    field: "nama",
     type: "String",
   },
   {
@@ -51,7 +68,7 @@ const columns = [
 
 const doRefreshData = () => {
   if (confirm("Apakah anda yakin menghapus data ini?")) {
-    // ApiSkills.getData();
+    ApiKategori.getData();
     Toast.success("Info", "Refresh Data!");
   }
 };
@@ -59,16 +76,53 @@ const doRefreshData = () => {
 const doDeleteData = async (id: number, index: number): Promise<Response> => {
   if (confirm("Apakah anda yakin menghapus data ini?")) {
     // data.value.splice(index, 1);
-    // let resDelete = await ApiSkills.deleteData(id);
-    // if (resDelete) {
-    Toast.success("Info", "Hapus Data!");
-    //   ApiSkills.getData();
-    // }
+    const resDelete = await ApiKategori.deleteData(id);
+    if (resDelete) {
+      jenis.value = null;
+      isAllActive.value = true;
+      isPengeluaranActive.value = false;
+      isPemasukanActive.value = false;
+      Toast.success("Info", "Data berhasil dihapus!");
+      // ApiKategori.getData();
+    }
   }
 };
 
 const doEditData = async (id: number, index: number) => {
-  Toast.success("Info", "Edit Data!");
+  router.push({
+    name: "AdminKategoriEdit",
+    params: { id: id },
+  });
+};
+
+const jenis: Ref<string | null> = ref(null);
+
+const styleTabActive = "tab-active";
+const isAllActive = ref(true);
+const isPengeluaranActive = ref(false);
+const isPemasukanActive = ref(false);
+
+const filterAll = () => {
+  jenis.value = null;
+  isAllActive.value = true;
+  isPengeluaranActive.value = false;
+  isPemasukanActive.value = false;
+  data.value = dataAsli.value;
+};
+
+const filterPengeluaran = () => {
+  jenis.value = "Pengeluaran";
+  isAllActive.value = false;
+  isPengeluaranActive.value = true;
+  isPemasukanActive.value = false;
+  data.value = dataAsli.value.filter((item) => item.jenis === "Pengeluaran");
+};
+const filterPemasukan = () => {
+  jenis.value = "Pemasukan";
+  isAllActive.value = false;
+  isPengeluaranActive.value = false;
+  isPemasukanActive.value = true;
+  data.value = dataAsli.value.filter((item) => item.jenis === "Pemasukan");
 };
 </script>
 <template>
@@ -84,9 +138,24 @@ const doEditData = async (id: number, index: number) => {
   </div>
   <div class="w-full py-4 px-2 flex justify-center">
     <div class="tabs">
-      <a class="tab tab-bordered tab-active">Semua</a>
-      <a class="tab tab-bordered">Pengeluaran</a>
-      <a class="tab tab-bordered">Pemasukan</a>
+      <a
+        class="tab tab-bordered"
+        :class="{ 'tab-active': isAllActive }"
+        @click="filterAll()"
+        >Semua</a
+      >
+      <a
+        class="tab tab-bordered"
+        :class="{ 'tab-active': isPengeluaranActive }"
+        @click="filterPengeluaran()"
+        >Pengeluaran</a
+      >
+      <a
+        class="tab tab-bordered"
+        :class="{ 'tab-active': isPemasukanActive }"
+        @click="filterPemasukan()"
+        >Pemasukan</a
+      >
     </div>
   </div>
 
@@ -130,7 +199,12 @@ const doEditData = async (id: number, index: number) => {
                     />
                   </svg>
                 </button>
-                <router-link :to="{ name: 'AdminKategoriTambah' }">
+                <router-link
+                  :to="{
+                    name: 'AdminKategoriTambah',
+                    params: { jenis: jenis },
+                  }"
+                >
                   <button
                     class="btn btn-sm btn-primary tooltip"
                     data-tip="Tambah Data"

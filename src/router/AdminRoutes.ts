@@ -35,9 +35,14 @@ const AdminRoutes: Array<any> = [
                 component: () => import("@/views/admin/kategori/KategoriIndex.vue"),
             },
             {
-                path: `${prefix}kategori/tambah`,
+                path: `${prefix}kategori/tambah/:jenis?`,
                 name: 'AdminKategoriTambah',
                 component: () => import("@/views/admin/kategori/KategoriTambah.vue"),
+            },
+            {
+                path: `${prefix}kategori/edit/:id`,
+                name: 'AdminKategoriEdit',
+                component: () => import("@/views/admin/kategori/KategoriEdit.vue"),
             },
             {
                 path: `${prefix}transaksi`,
