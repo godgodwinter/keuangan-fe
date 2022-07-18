@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Fungsi from "@/components/lib/FungsiCampur";
 import ApiTransaksi from "@/services/api/apiTransaksi";
 import ApiKategori from "@/services/api/apiKategori";
 import { useStoreDataKategori } from "@/stores/data/dataKategori";
@@ -43,6 +44,7 @@ const fnFilterKategori = (jenis: string) => {
 moment.updateLocale("id", localization);
 const router = useRouter();
 const route = useRoute();
+const id = route.params.id;
 const storeAdmin = useStoreAdmin();
 storeAdmin.setPagesActive("transaksi");
 const dataForm: Ref<string[]> = ref([]);
@@ -56,27 +58,10 @@ let monthLong = formatter.format(new Date(year, month));
 const today = moment().format("DD MMMM YYYY");
 dataForm.value.tgl = moment().format("YYYY-MM-DD");
 dataForm.value.jenis = "Pengeluaran";
-// dataForm.value.kategori_id = {
-//   label: "tes",
-//   id: 1,
-// };
-// dataForm.value.kategori_id.label = "Tes";
-// let daysInMonth = new Date(2022, 2, 0).getDate();
+
 let daysInMonth = new Date(year, month, 0).getDate();
 
 const pilihKategori = ref([]);
-// if (dataForm.value.jenis == "Pengeluaran") {
-//   // pilihKategori.value = [
-//   //   {
-//   //     label: "tes",
-//   //     id: 1,
-//   //   },
-//   //   {
-//   //     label: "tes2",
-//   //     id: 2,
-//   //   },
-//   // ];
-// }
 
 const doPengeluaran = async (values: any): Promise<void> => {
   dataForm.value.jenis = "Pengeluaran";
@@ -107,7 +92,7 @@ const onSubmit = (values) => {
 
 const doSubmit = async (values: any): Promise<void> => {
   // console.log(values);
-  const resSubmit = await ApiTransaksi.doStoreData(values);
+  const resSubmit = await ApiTransaksi.doUpdate(id, values);
   if (resSubmit) {
     Toast.success("Info", "Data berhasil ditambahkan!");
     router.push({ name: "AdminTransaksi" });
@@ -126,6 +111,25 @@ const fnRupiah = () => {
 
   dataForm.value.nominal = rupiah.format(myString);
 };
+
+const resData = ref(null);
+const getDataId = async (): Promise<void> => {
+  resData.value = await ApiTransaksi.getDataId(id);
+  if (resData.value) {
+    dataForm.value.tgl = resData.value.tgl;
+    dataForm.value.jenis = resData.value.jenis;
+    dataForm.value.kategori_id = {
+      label: resData.value.kategori_nama,
+      id: resData.value.kategori_id,
+    };
+    dataForm.value.nominal = Fungsi.rupiah(resData.value.nominal);
+    dataForm.value.nama = resData.value.nama;
+  } else {
+    Toast.warning("Info", "Data tidak ditemukan");
+    router.push({ name: "AdminKategori" });
+  }
+};
+getDataId();
 </script>
 <template>
   <div class="w-full py-4 px-2 flex justify-center">

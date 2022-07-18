@@ -59,6 +59,11 @@ const AdminRoutes: Array<any> = [
                 name: 'AdminTransaksiTambah',
                 component: () => import("@/views/admin/transaksi/TransaksiTambah.vue"),
             },
+            {
+                path: `${prefix}transaksi/edit/:id`,
+                name: 'AdminTransaksiEdit',
+                component: () => import("@/views/admin/transaksi/TransaksiEdit.vue"),
+            },
         ],
     },
 ];

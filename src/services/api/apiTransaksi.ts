@@ -128,13 +128,15 @@ const doUpdate = async (id: number, data: any[]): Promise<boolean> => {
         }
         const response = await Api.put(`admin/transaksi/${id}`, dataForm);
         // update data
-        let dataUpdate = dataAsli.value.filter((item) => item.id == id);
-        dataUpdate[0].tgl = data.tgl;
-        dataUpdate[0].nama = data.nama;
-        dataUpdate[0].nominal = data.nominal;
-        dataUpdate[0].kategori_id = data.kategori_id;
-        dataUpdate[0].jenis = data.jenis;
-        storeDataTransaksi.setData(dataAsli.value);
+        // let dataUpdate = dataAsli.value.filter((item) => item.id == id);
+        // dataUpdate[0].tgl = data.tgl;
+        // dataUpdate[0].nama = data.nama;
+        // dataUpdate[0].nominal = data.nominal;
+        // dataUpdate[0].kategori_id = data.kategori_id;
+        // dataUpdate[0].jenis = data.jenis;
+        // storeDataTransaksi.setData(dataAsli.value);
+
+        getData();
         return true;
     } catch (error) {
         console.error(error);
@@ -147,6 +149,7 @@ const deleteData = async (id: number) => {
         let data = dataAsli.value.filter((item) => item.id !== id);
         storeDataTransaksi.setData(data);
 
+        getData();
         // getData();
         // if (jenis == "Pemasukan") {
         //     dataRekap.value.pemasukan -= nominal;
