@@ -8,11 +8,13 @@ import "./index.css";
 // library fixed
 import VueGoodTablePlugin from "vue-good-table-next";
 import AOS from "aos";
+import vSelect from "vue-select";
 
 
 // style
 import "aos/dist/aos.css";
 import "vue-good-table-next/dist/vue-good-table-next.css";
+import "vue-select/dist/vue-select.css";
 
 const app = createApp(App);
 
@@ -20,5 +22,6 @@ app.use(createPinia());
 app.use(router);
 app.use(AOS.init());
 app.use(VueGoodTablePlugin);
+app.component("v-select", vSelect);
 
 app.mount("#app");

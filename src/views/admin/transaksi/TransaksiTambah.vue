@@ -1,25 +1,149 @@
 <script setup lang="ts">
+import ApiTransaksi from "@/services/api/apiTransaksi";
+import ApiKategori from "@/services/api/apiKategori";
+import { useStoreDataKategori } from "@/stores/data/dataKategori";
 import { useStoreAdmin } from "@/stores/admin";
-// import ApiProfile from "@/services/api/apiProfile";
+import moment from "moment/min/moment-with-locales";
+import localization from "moment/locale/id";
 import Toast from "@/components/lib/Toast";
 import { Form, Field } from "vee-validate";
 import fnValidasi from "@/components/lib/babengValidasi";
 import { ref, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
+const storeDataKategori = useStoreDataKategori();
+const dataKategoriAsli = computed(() => storeDataKategori.getData);
+const dataKategori = ref([]);
+storeDataKategori.$subscribe((mutation, state) => {
+  // console.log(mutation, state);
+  fnFilterKategori("Pengeluaran");
+});
+
+dataKategori.value = dataKategoriAsli.value;
+// if (dataKategoriAsli.value.length < 1) {
+ApiKategori.getData();
+// }
+const fnFilterKategori = (jenis: string) => {
+  dataKategori.value = dataKategoriAsli.value.filter(
+    (item) => item.jenis === jenis
+  );
+  pilihKategori.value = [];
+  dataKategori.value.forEach((item) => {
+    pilihKategori.value.push({
+      label: item.nama,
+      id: item.id,
+    });
+  });
+
+  dataForm.value.kategori_id = {
+    label: dataKategori.value[0].nama,
+    id: dataKategori.value[0].id,
+  };
+};
+
+moment.updateLocale("id", localization);
 const router = useRouter();
 const route = useRoute();
 const storeAdmin = useStoreAdmin();
 storeAdmin.setPagesActive("transaksi");
 const dataForm: Ref<string[]> = ref([]);
+const formatter = new Intl.DateTimeFormat("id", { month: "long" });
+let dt = new Date();
+let dateNow = dt.getDate();
+let month = dt.getMonth();
+let year = dt.getFullYear();
+let monthLong = formatter.format(new Date(year, month));
+
+const today = moment().format("DD MMMM YYYY");
+dataForm.value.tgl = moment().format("YYYY-MM-DD");
+dataForm.value.jenis = "Pengeluaran";
+// dataForm.value.kategori_id = {
+//   label: "tes",
+//   id: 1,
+// };
+// dataForm.value.kategori_id.label = "Tes";
+// let daysInMonth = new Date(2022, 2, 0).getDate();
+let daysInMonth = new Date(year, month, 0).getDate();
+
+const pilihKategori = ref([]);
+// if (dataForm.value.jenis == "Pengeluaran") {
+//   // pilihKategori.value = [
+//   //   {
+//   //     label: "tes",
+//   //     id: 1,
+//   //   },
+//   //   {
+//   //     label: "tes2",
+//   //     id: 2,
+//   //   },
+//   // ];
+// }
+
+const doPengeluaran = async (values: any): Promise<void> => {
+  dataForm.value.jenis = "Pengeluaran";
+  dataForm.value.kategori_id = null;
+  fnFilterKategori("Pengeluaran");
+};
+const doPemasukan = async (values: any): Promise<void> => {
+  dataForm.value.jenis = "Pemasukan";
+  dataForm.value.kategori_id = null;
+  fnFilterKategori("Pemasukan");
+};
+
+const babengErrors = ref([]);
+
+const onSubmit = (values) => {
+  // console.log(values);
+
+  if (dataForm.value.kategori_id == null) {
+    babengErrors.value.kategori_id = "Kategori harus diisi";
+  } else {
+    babengErrors.value.kategori_id = "";
+    values.nominal = values.nominal.replace(/\D/g, "");
+    values.kategori_id = dataForm.value.kategori_id.id;
+    doSubmit(values);
+  }
+};
+
+const doSubmit = async (values: any): Promise<void> => {
+  console.log(values);
+  const resSubmit = await ApiTransaksi.doStoreData(values);
+  if (resSubmit) {
+    Toast.success("Info", "Data berhasil ditambahkan!");
+    router.push({ name: "AdminTransaksi" });
+  }
+};
+
+const fnRupiah = () => {
+  const rupiah = new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+  });
+  // regex remove all non-numeric characters
+  const myString = dataForm.value.nominal.replace(/\D/g, "");
+  // console.log(dataForm.value.nominal, myString, rupiah.format(myString));
+
+  dataForm.value.nominal = rupiah.format(myString);
+};
 </script>
 <template>
   <div class="w-full py-4 px-2 flex justify-center">
     <div class="tabs">
-      <a class="tab tab-bordered">Pengeluaran</a>
-      <a class="tab tab-bordered tab-active">Pemasukan</a>
+      <a
+        class="tab tab-bordered"
+        :class="{ 'tab-active': dataForm.jenis == 'Pengeluaran' }"
+        @click="doPengeluaran()"
+        >Pengeluaran</a
+      >
+      <a
+        class="tab tab-bordered"
+        :class="{ 'tab-active': dataForm.jenis == 'Pemasukan' }"
+        @click="doPemasukan()"
+        >Pemasukan</a
+      >
     </div>
   </div>
-
+  <!-- {{ dataKategori }} -->
   <div class="px-4 py-4" v-if="dataForm">
     <div class="w-full">
       <div class="shadow rounded-lg px-0">
@@ -34,6 +158,12 @@ const dataForm: Ref<string[]> = ref([]);
                         <label for="name" class="text-sm font-medium block mb-2"
                           >Tanggal</label
                         >
+                        <Field
+                          v-model="dataForm.jenis"
+                          name="jenis"
+                          type="hidden"
+                          class="input input-bordered w-11/12"
+                        />
                         <Field
                           :rules="fnValidasi.validateData2"
                           v-model="dataForm.tgl"
@@ -72,30 +202,31 @@ const dataForm: Ref<string[]> = ref([]);
                                 /></svg></span
                           ></router-link>
                         </div>
-                        <Field
-                          :rules="fnValidasi.validateData2"
-                          v-model="dataForm.kategori"
-                          name="kategori"
-                          type="text"
-                          class="input input-bordered w-11/12"
-                        />
+
+                        <v-select
+                          class="input py-2 px-3 w-11/12 style-chooser"
+                          :options="pilihKategori"
+                          v-model="dataForm.kategori_id"
+                          v-bind:class="{ disabled: false }"
+                        ></v-select>
 
                         <div class="text-xs text-red-600 mt-1">
-                          {{ errors.kategori }}
+                          {{ babengErrors.kategori_id }}
                         </div>
                       </div>
                       <div>
                         <label
                           for="nominal"
                           class="text-sm font-medium block mb-2"
-                          >Nominal</label
+                          >Jumlah / Nominal</label
                         >
                         <Field
                           :rules="fnValidasi.validateData2"
                           v-model="dataForm.nominal"
                           name="nominal"
-                          type="date"
+                          type="text"
                           class="input input-bordered w-11/12"
+                          @keyup="fnRupiah()"
                         />
 
                         <div class="text-xs text-red-600 mt-1">
@@ -103,14 +234,13 @@ const dataForm: Ref<string[]> = ref([]);
                         </div>
                       </div>
                       <div>
-                        <label for="name" class="text-sm font-medium block mb-2"
+                        <label for="desc" class="text-sm font-medium block mb-2"
                           >Keterangan</label
                         >
                         <Field
-                          :rules="fnValidasi.validateData2"
-                          v-model="dataForm.about_me"
+                          v-model="dataForm.nama"
                           v-slot="{ field }"
-                          name="about_me"
+                          name="nama"
                           type="text"
                           class="input input-bordered w-11/12"
                         >
@@ -122,7 +252,7 @@ const dataForm: Ref<string[]> = ref([]);
                         </Field>
 
                         <div class="text-xs text-red-600 mt-1">
-                          {{ errors.about_me }}
+                          {{ errors.nama }}
                         </div>
                       </div>
                     </div>
@@ -142,3 +272,20 @@ const dataForm: Ref<string[]> = ref([]);
     </div>
   </div>
 </template>
+
+<style>
+.style-chooser .vs__search::placeholder,
+.style-chooser .vs__dropdown-toggle,
+.style-chooser .vs__dropdown-menu {
+  background: #dfe5fb;
+  border: none;
+  color: #394066;
+  text-transform: lowercase;
+  font-variant: small-caps;
+}
+
+.style-chooser .vs__clear,
+.style-chooser .vs__open-indicator {
+  fill: #394066;
+}
+</style>
