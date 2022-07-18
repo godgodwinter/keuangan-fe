@@ -1,5 +1,3 @@
-<script setup></script>
-
 <template>
   <div class="flex justify-center flex-col">
     <div class="flex justify-center">

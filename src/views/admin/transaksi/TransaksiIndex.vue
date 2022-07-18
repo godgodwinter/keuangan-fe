@@ -6,49 +6,41 @@ import { ref, computed } from "vue";
 import { useStoreAdmin } from "@/stores/admin";
 import Toast from "@/components/lib/Toast";
 import router from "@/router";
+import moment from "moment/min/moment-with-locales";
+import localization from "moment/locale/id";
+moment.updateLocale("id", localization);
+const today = moment().format("DD MMMM YYYY");
 const storeDataTransaksi = useStoreDataTransaksi();
-storeDataTransaksi.$subscribe((mutation, state) => {
-  dataAsliTgl.value = [...new Set(dataAsli.value.map((item) => item.tgl))];
-  dataAsliTgl.value.forEach((item) => {
-    let sumPemasukan = 0;
-    dataAsli.value.forEach((item2) => {
-      if (item2.tgl === item && item2.jenis === "Pemasukan") {
-        sumPemasukan += parseInt(item2.nominal);
-      }
-    });
-    let sumPengeluaran = 0;
-    dataAsli.value.forEach((item2) => {
-      if (item2.tgl === item && item2.jenis === "Pengeluaran") {
-        sumPengeluaran += parseInt(item2.nominal);
-      }
-    });
-    let saldoPerTgl = 0;
-    saldoPerTgl = sumPemasukan - sumPengeluaran;
-    // saldo = parseInt(sumPemasukan) - parseInt(sumPengeluaran);
-    data.value.push({
-      tgl: item,
-      // data: dataAsli.value.filter((item2) => item2.tgl === item),
-      count: dataAsli.value.filter((item2) => item2.tgl === item).length,
-      sumPemasukan,
-      sumPengeluaran,
-      saldoPerTgl,
-    });
-  });
-});
+storeDataTransaksi.$subscribe((mutation, state) => {});
 
 const dataAsli = computed(() => storeDataTransaksi.getData);
+const data = computed(() => storeDataTransaksi.getDataShow);
 const dataRekap = computed(() => storeDataTransaksi.getDataRekap);
 
 // const uniqDate= [...new Set(dataAsli.value.map((item) => item.tgl))];
 const dataAsliTgl = ref([]);
-const data = ref([]);
+// const data = ref([]);
 const dataForm = ref([]);
-// if (dataKategoriAsli.value.length < 1) {
-ApiTransaksi.getData();
-// }
+if (dataAsli.value.length < 1) {
+  ApiTransaksi.getData();
+}
 const storeAdmin = useStoreAdmin();
 
 storeAdmin.setPagesActive("transaksi");
+
+const doDeleteData = async (id: number, index: number): Promise<Response> => {
+  if (confirm("Apakah anda yakin menghapus data ini?")) {
+    // data.value.splice(index, 1);
+    const resDelete = await ApiTransaksi.deleteData(id);
+    if (resDelete) {
+      Toast.success("Info", "Data berhasil dihapus!");
+      // ApiKategori.getData();
+      await ApiTransaksi.getData();
+    } else {
+      Toast.danger("Info", "Data gagal dihapus!");
+    }
+  }
+};
 </script>
 <template>
   <div class="pt-4 px-5 md:flex justify-between">
@@ -88,8 +80,8 @@ storeAdmin.setPagesActive("transaksi");
   </div>
   <div class="w-full py-4 px-2 flex justify-center">
     <div class="tabs">
-      <a class="tab tab-bordered">Harian</a>
-      <a class="tab tab-bordered tab-active">Mingguan</a>
+      <a class="tab tab-bordered tab-active">Harian</a>
+      <a class="tab tab-bordered">Mingguan</a>
       <a class="tab tab-bordered">Bulanan</a>
       <a class="tab tab-bordered">Tahunan</a>
     </div>
@@ -120,31 +112,70 @@ storeAdmin.setPagesActive("transaksi");
     </div>
   </div>
 
-  <div class="w-full py-4 flex-col justify-center px-4 space-y-4 shadow-md">
+  <div
+    class="w-full py-4 flex-col justify-center px-4 space-y-4 shadow-md"
+    v-for="(item, index) in data"
+  >
     <!-- head -->
     <div class="grid grid-cols-3 w-full">
       <div class="grid-cols-1 font-bold border-r-2">
         <div class="flex flex-row space-x-2">
-          <span class="text-2xl">17</span>
+          <span class="text-2xl">{{ item.tgl }}</span>
           <div>
-            <div><span>Juni 2022</span></div>
-            <div>Minggu</div>
+            <div>
+              <span>{{ item.blnthn }}</span>
+            </div>
+            <div>{{ item.week }}</div>
           </div>
         </div>
       </div>
-      <div class="text-right text-sky-600 border-r-2 px-2">Rp 400.000</div>
-      <div class="text-right text-red-600">Rp 450.000</div>
+      <div class="text-right text-sky-600 border-r-2 px-2">
+        {{ Fungsi.rupiah(item.sumPemasukan ? item.sumPemasukan : 0) }}
+      </div>
+      <div class="text-right text-red-600">
+        {{ Fungsi.rupiah(item.sumPengeluaran ? item.sumPengeluaran : 0) }}
+      </div>
     </div>
     <!-- head -->
     <!-- content -->
-    <div class="grid grid-cols-3 w-full">
-      <div class="grid-cols-1 border-r-2"><span>Pakaian</span></div>
-      <div class="border-r-2 px-2">
-        <span>Baju baru test text panjang abcdefg</span>
+    <div
+      class="grid grid-cols-3 w-full"
+      v-for="(subItem, subItemIndex) in item.data"
+    >
+      <div class="grid-cols-1 border-r-2 flex space-x-2">
+        <button
+          class="bg-transparent hover:bg-gray-200 text-danger font-semibold hover:text-danger-content border border-danger hover:border-danger py-2 px-2 rounded"
+          @click="doDeleteData(subItem.id, subItemIndex)"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 fill-current"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </button>
+        <span>{{ subItem.kategori_nama }}</span>
       </div>
-      <div class="text-right text-red-600 hover:underline">Rp 100.000</div>
+      <div class="border-r-2 px-2">
+        <span>{{ subItem.nama }}</span>
+      </div>
+      <div
+        class="text-right hover:underline"
+        :class="{
+          'text-red-600': subItem.jenis == 'Pengeluaran',
+          'text-sky-600': subItem.jenis == 'Pemasukan',
+        }"
+      >
+        {{ Fungsi.rupiah(subItem.nominal ? subItem.nominal : 0) }}
+      </div>
     </div>
-    <div class="grid grid-cols-3 w-full">
+    <!-- <div class="grid grid-cols-3 w-full">
       <div class="grid-cols-1 border-r-2"><span>Gaji</span></div>
       <div class="border-r-2 px-2"><span>-</span></div>
       <div class="text-right text-sky-600 hover:underline">Rp 400.000</div>
@@ -153,7 +184,7 @@ storeAdmin.setPagesActive("transaksi");
       <div class="grid-cols-1 border-r-2"><span>Makanan</span></div>
       <div class="border-r-2 px-2"><span>-</span></div>
       <div class="text-right text-red-600 hover:underline">Rp 400.000</div>
-    </div>
+    </div> -->
     <!-- content -->
   </div>
 </template>

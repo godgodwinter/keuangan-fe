@@ -100,6 +100,7 @@ const onSubmit = (values) => {
     babengErrors.value.kategori_id = "";
     values.nominal = values.nominal.replace(/\D/g, "");
     values.kategori_id = dataForm.value.kategori_id.id;
+    values.kategori_nama = dataForm.value.kategori_id.label;
     doSubmit(values);
   }
 };
