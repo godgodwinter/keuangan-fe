@@ -1,10 +1,52 @@
 <script setup lang="ts">
+import Fungsi from "@/components/lib/FungsiCampur";
+import ApiTransaksi from "@/services/api/apiTransaksi";
+import { useStoreDataTransaksi } from "@/stores/data/dataTransaksi";
 import { ref, computed } from "vue";
 import { useStoreAdmin } from "@/stores/admin";
 import Toast from "@/components/lib/Toast";
 import router from "@/router";
+const storeDataTransaksi = useStoreDataTransaksi();
+storeDataTransaksi.$subscribe((mutation, state) => {
+  dataAsliTgl.value = [...new Set(dataAsli.value.map((item) => item.tgl))];
+  dataAsliTgl.value.forEach((item) => {
+    let sumPemasukan = 0;
+    dataAsli.value.forEach((item2) => {
+      if (item2.tgl === item && item2.jenis === "Pemasukan") {
+        sumPemasukan += parseInt(item2.nominal);
+      }
+    });
+    let sumPengeluaran = 0;
+    dataAsli.value.forEach((item2) => {
+      if (item2.tgl === item && item2.jenis === "Pengeluaran") {
+        sumPengeluaran += parseInt(item2.nominal);
+      }
+    });
+    let saldoPerTgl = 0;
+    saldoPerTgl = sumPemasukan - sumPengeluaran;
+    // saldo = parseInt(sumPemasukan) - parseInt(sumPengeluaran);
+    data.value.push({
+      tgl: item,
+      // data: dataAsli.value.filter((item2) => item2.tgl === item),
+      count: dataAsli.value.filter((item2) => item2.tgl === item).length,
+      sumPemasukan,
+      sumPengeluaran,
+      saldoPerTgl,
+    });
+  });
+});
+
+const dataAsli = computed(() => storeDataTransaksi.getData);
+const dataRekap = computed(() => storeDataTransaksi.getDataRekap);
+
+// const uniqDate= [...new Set(dataAsli.value.map((item) => item.tgl))];
+const dataAsliTgl = ref([]);
+const data = ref([]);
+const dataForm = ref([]);
+// if (dataKategoriAsli.value.length < 1) {
+ApiTransaksi.getData();
+// }
 const storeAdmin = useStoreAdmin();
-const dataAsli = ref([]);
 
 storeAdmin.setPagesActive("transaksi");
 </script>
@@ -16,13 +58,32 @@ storeAdmin.setPagesActive("transaksi");
       >
         Dashboard
       </span> -->
+      <!-- {{ dataAsli }} -->
+
+      <!-- {{ dataAsli.length }} -->
+      <!-- {{ dataAsliTgl }} -->
+      <!-- {{ data }} -->
+      <!-- {{ dataRekap }} -->
     </div>
     <div class="md:py-0 py-4 space-x-2 space-y-2">
-      <input
+      <!-- <input
         type="date"
         placeholder="Pilih Bulan"
         class="input input-bordered w-full max-w-xs"
-      />
+      /> -->
+      <Datepicker
+        format="yyyy/MM"
+        value-format="yyyy-MM"
+        v-model="dataForm.monthyear"
+        monthPicker
+        required
+      >
+        <template #calendar-header="{ index, day }">
+          <div :class="index === 5 || index === 6 ? 'red-color' : ''">
+            {{ day }}
+          </div>
+        </template>
+      </Datepicker>
     </div>
   </div>
   <div class="w-full py-4 px-2 flex justify-center">
@@ -38,17 +99,23 @@ storeAdmin.setPagesActive("transaksi");
     <div class="grid grid-cols-3 w-full text-center">
       <div>
         <div class="font-bold">Pemasukan</div>
-        <div class="text-sky-600">800.000</div>
+        <div class="text-sky-600">
+          {{ Fungsi.rupiah(dataRekap.pemasukan ? dataRekap.pemasukan : 0) }}
+        </div>
       </div>
 
       <div class="">
         <div class="font-bold">Pengeluaran</div>
-        <div class="text-red-600">440.000</div>
+        <div class="text-red-600">
+          {{ Fungsi.rupiah(dataRekap.pengeluaran ? dataRekap.pengeluaran : 0) }}
+        </div>
       </div>
 
       <div class="">
         <div class="font-bold">Saldo</div>
-        <div class="text-primary-content">360.000</div>
+        <div class="text-primary-content">
+          {{ Fungsi.rupiah(dataRekap.saldo ? dataRekap.saldo : 0) }}
+        </div>
       </div>
     </div>
   </div>

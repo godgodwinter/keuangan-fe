@@ -9,7 +9,9 @@ const getData = async () => {
     try {
         const response = await Api.get(`admin/transaksi`);
         let res = response.data;
+        let resRekap = response.dataRekap;
         storeDataTransaksi.setData(res);
+        storeDataTransaksi.setDataRekap(resRekap);
         // console.log(res);
 
         return true;

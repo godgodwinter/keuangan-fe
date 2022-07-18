@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@tailwindcss/typography": "^0.5.2",
+    "@vuepic/vue-datepicker": "^3.3.1",
     "aos": "^2.3.4",
     "axios": "^0.27.2",
     "daisyui": "^2.18.1",
