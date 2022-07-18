@@ -31,6 +31,7 @@ const doLogin = async (
 
         return true;
     } catch (error) {
+        Toast.danger("Error", `Gagal login!`);
         console.error(error);
     }
 };
@@ -49,7 +50,9 @@ const doCheckToken = async (token: string): Promise<boolean | undefined> => {
 
             const dataMe = {
                 id: response.data.me.id,
-                name: response.data.me.nama,
+                nama: response.data.me.nama,
+                username: response.data.me.username,
+                email: response.data.me.email,
             };
             storeAdminAuth.setMe(dataMe);
             // console.log(dataMe);
@@ -61,6 +64,7 @@ const doCheckToken = async (token: string): Promise<boolean | undefined> => {
     } catch (error) {
         Toast.danger("Error", `Gagal menghubungkan ke Server!`);
         console.error(error);
+        return false;
     }
 };
 

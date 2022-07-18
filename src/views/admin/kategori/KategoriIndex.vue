@@ -130,7 +130,7 @@ const doEditData = async (id: number, index: number) => {
                     />
                   </svg>
                 </button>
-                <router-link :to="{ name: 'AdminUserTambah' }">
+                <router-link :to="{ name: 'AdminKategoriTambah' }">
                   <button
                     class="btn btn-sm btn-primary tooltip"
                     data-tip="Tambah Data"

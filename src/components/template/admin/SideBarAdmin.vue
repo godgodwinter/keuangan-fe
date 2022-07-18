@@ -42,7 +42,7 @@ const doLogout = async (): Promise<void> => {
               <p
                 class="text-base-content text-md font-semibold text-center py-2 capitalize"
               >
-                {{ me.name }}
+                {{ me.nama }}
               </p>
               <span
                 class="py-2 hover:scale-125 tooltip"
