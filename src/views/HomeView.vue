@@ -7,6 +7,9 @@ import { useStoreAdminAuth } from "@/stores/adminAuth";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const storeAdminAuth = useStoreAdminAuth();
+const token = computed(() => storeAdminAuth.getToken);
+const isLogin = computed(() => storeAdminAuth.getIsLogin);
+storeAdminAuth.$subscribe((mutation, state) => {});
 
 const resLogin = ref(false);
 const onSubmit = async (values: any) => {
@@ -25,6 +28,9 @@ const onSubmit = async (values: any) => {
     router.push({ name: "AdminDashboard" });
   }
 };
+if (isLogin.value) {
+  router.push({ name: "AdminDashboard" });
+}
 </script>
 
 <template>
