@@ -14,7 +14,8 @@ const storeDataTransaksi = useStoreDataTransaksi();
 storeDataTransaksi.$subscribe((mutation, state) => {});
 const dataAsli = computed(() => storeDataTransaksi.getData);
 const data = computed(() => storeDataTransaksi.getDataShow);
-const dataRekap = computed(() => storeDataTransaksi.getDataRekap);
+// DATAREKAPALL
+const dataRekap = computed(() => storeDataTransaksi.getDataRekapAll);
 const dataYearly = computed(() => storeDataTransaksi.getDataShowYearly);
 
 // const uniqDate= [...new Set(dataAsli.value.map((item) => item.tgl))];
@@ -40,9 +41,8 @@ storeAdmin.setPagesActive("transaksi");
 // });
 </script>
 <template>
-  <div class="pt-4 px-5 md:flex justify-between">
+  <!-- <div class="pt-4 px-5 md:flex justify-between">
     <div>
-      <!-- {{ Fungsi.getLastYear() }} -->
     </div>
     <div class="md:py-0 py-4 space-x-2 space-y-2">
       <Datepicker
@@ -59,7 +59,7 @@ storeAdmin.setPagesActive("transaksi");
         </template>
       </Datepicker>
     </div>
-  </div>
+  </div> -->
   <div class="w-full py-6 px-2 flex justify-center shadow">
     <div class="grid grid-cols-3 w-full text-center">
       <div>

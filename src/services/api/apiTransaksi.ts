@@ -9,8 +9,10 @@ moment.updateLocale("id", localization);
 const storeDataTransaksi = useStoreDataTransaksi();
 
 const dataAsli = computed(() => storeDataTransaksi.getData);
-const dataShow = computed(() => storeDataTransaksi.getDataShow);
-const dataRekap = computed(() => storeDataTransaksi.getDataRekap);
+const dataBlnThn = computed(() => storeDataTransaksi.getDataBlnThn);
+// const dataShow = computed(() => storeDataTransaksi.getDataShow);
+// const dataShowMonthly = computed(() => storeDataTransaksi.getDataShowMonthly);
+// const dataRekap = computed(() => storeDataTransaksi.getDataRekap);
 
 const dataAsliTgl = ref([]);
 const data = ref([]);
@@ -57,9 +59,40 @@ const fnSetData = () => {
     storeDataTransaksi.setDataShow(data.value);
 };
 
+const dataDaily = ref([]);
+const fnGetDataDaily = (bln = moment().format("MM"), year = moment().format("YYYY")) => {
+    let result = [];
+    // console.log(bln, year);
+    data.value.forEach((item) => {
+        if (item.bln === bln && item.thn === year) {
+            result.push(item);
+        }
+    });
+
+    return result;
+}
+
+const fnGetDataRekapYearly = (year = moment().format("YYYY")) => {
+    let result = {
+        pemasukan: 0,
+        pengeluaran: 0,
+        saldo: 0,
+    };
+
+    data.value.forEach((item) => {
+        // if (item.tgl.includes(item2.number)) {
+        if ((item.thn).includes((year))) {
+            result.pemasukan += item.sumPemasukan;
+            result.pengeluaran += item.sumPengeluaran;
+            result.saldo = result.pemasukan - result.pengeluaran;
+        }
+    });
+    return result;
+}
+
 
 const dataMonthly = ref([]);
-const fnGetDataMonthly = () => {
+const fnGetDataMonthly = (year = moment().format("YYYY")) => {
     let result = [];
     Fungsi.getMonthNamesObj().forEach((item, index) => {
         result.push({
@@ -76,10 +109,10 @@ const fnGetDataMonthly = () => {
     // data.value.filter tgl berdasarkan bulan
     data.value.forEach((item) => {
         result.forEach((item2) => {
-            // console.log(item.bln, item2.string, item.bln.includes(item2.string));
+            // console.log(item.bln + item.thn, item2.string + year, (item.bln + item.thn).includes((item2.string + year)));
 
             // if (item.tgl.includes(item2.number)) {
-            if (item.bln.includes(item2.string)) {
+            if ((item.bln + item.thn).includes((item2.string + year))) {
                 item2.pemasukan += item.sumPemasukan;
                 item2.pengeluaran += item.sumPengeluaran;
                 item2.saldoMonthly = item2.pemasukan - item2.pengeluaran;
@@ -89,7 +122,7 @@ const fnGetDataMonthly = () => {
     return result;
 }
 const dataShowYearly = ref([]);
-const fnGetDataYeardataShowYearly = () => {
+const fnGetDataShowYearly = () => {
     let result = [];
     Fungsi.getLastYear().forEach((item, index) => {
         result.push({
@@ -120,16 +153,23 @@ const fnGetDataYeardataShowYearly = () => {
 const getData = async () => {
     try {
         const response = await Api.get(`admin/transaksi`);
-        let res = response.data;
-        let resRekap = response.dataRekap;
+        const res = response.data;
+        const resRekap = response.dataRekap;
         storeDataTransaksi.setData(res);
-        storeDataTransaksi.setDataRekap(resRekap);
+        storeDataTransaksi.setDataRekapAll(resRekap);
         // console.log(res);
         await fnSetData();
-        let resultMonthly = fnGetDataMonthly();
+        // console.log(dataBlnThn.value);
+
+        const resultMonthly = fnGetDataMonthly(dataBlnThn.value.thn); //YYYY
         storeDataTransaksi.setDataShowMonthly(resultMonthly);
-        let resultYearly = fnGetDataYeardataShowYearly();
+        const resultYearly = fnGetDataShowYearly();
         storeDataTransaksi.setDataShowYearly(resultYearly);
+        const resultDaily = fnGetDataDaily(dataBlnThn.value.bln, dataBlnThn.value.thn);//MM YYYY
+        storeDataTransaksi.setDataShowDaily(resultDaily);
+        const resultRekapYearly = fnGetDataRekapYearly(dataBlnThn.value.thn);
+        storeDataTransaksi.setDataRekap(resultRekapYearly);
+
         // console.log(resultMonthly);
 
 

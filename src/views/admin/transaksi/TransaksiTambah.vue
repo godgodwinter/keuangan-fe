@@ -32,6 +32,16 @@ const fnFilterKategori = (jenis: string) => {
       label: item.nama,
       id: item.id,
     });
+    // sort asc
+    // pilihKategori.value.sort((a, b) => {
+    //   if (a.nama < b.nama) {
+    //     return -1;
+    //   }
+    //   if (a.nama > b.nama) {
+    //     return 1;
+    //   }
+    //   return 0;
+    // });
   });
 
   dataForm.value.kategori_id = {

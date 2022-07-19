@@ -13,7 +13,8 @@ const today = moment().format("DD MMMM YYYY");
 const storeDataTransaksi = useStoreDataTransaksi();
 storeDataTransaksi.$subscribe((mutation, state) => {});
 const dataAsli = computed(() => storeDataTransaksi.getData);
-const data = computed(() => storeDataTransaksi.getDataShow);
+const data = computed(() => storeDataTransaksi.getDataShowDaily);
+const dataBlnThn = computed(() => storeDataTransaksi.getDataBlnThn);
 const dataRekap = computed(() => storeDataTransaksi.getDataRekap);
 
 // const uniqDate= [...new Set(dataAsli.value.map((item) => item.tgl))];
@@ -47,6 +48,26 @@ const doEditData = async (id: number, index: number) => {
     params: { id: id },
   });
 };
+
+dataForm.value.monthyear = {
+  month: dataBlnThn.value.blnNumber - 1,
+  year: dataBlnThn.value.thn,
+};
+
+const doChangeMonth = () => {
+  let m = dataForm.value.monthyear.month;
+  let y = dataForm.value.monthyear.year;
+  let tempData = {
+    nama: moment(dataForm.value.monthyear).format("MMMM YYYY"),
+    bln: moment(dataForm.value.monthyear).format("MM"),
+    blnNumber: moment(dataForm.value.monthyear).format("Mo"),
+    blnNama: moment(dataForm.value.monthyear).format("MMMM"),
+    thn: moment(dataForm.value.monthyear).format("YYYY"),
+  };
+  storeDataTransaksi.setDataBlnThn(tempData);
+  ApiTransaksi.getData();
+  // console.log(dataForm.value.monthyear);
+};
 </script>
 <template>
   <div class="pt-4 px-5 md:flex justify-between">
@@ -56,6 +77,7 @@ const doEditData = async (id: number, index: number) => {
       >
         Dashboard
       </span> -->
+      <!-- {{ dataBlnThn }} -->
       <!-- {{ dataAsli }} -->
 
       <!-- {{ dataAsli.length }} -->
@@ -63,14 +85,9 @@ const doEditData = async (id: number, index: number) => {
       <!-- {{ data }} -->
       <!-- {{ dataRekap }} -->
     </div>
-    <div class="md:py-0 py-4 space-x-2 space-y-2">
-      <!-- <input
-        type="date"
-        placeholder="Pilih Bulan"
-        class="input input-bordered w-full max-w-xs"
-      /> -->
+    <div class="pt-4 px-5 flex justify-center">
       <Datepicker
-        format="yyyy/MM"
+        format="MMMM yyyy"
         value-format="yyyy-MM"
         v-model="dataForm.monthyear"
         monthPicker
@@ -82,6 +99,9 @@ const doEditData = async (id: number, index: number) => {
           </div>
         </template>
       </Datepicker>
+      <button class="btn btn-sm btn-primary" @click="doChangeMonth()">
+        Pilih
+      </button>
     </div>
   </div>
   <div class="w-full py-6 px-2 flex justify-center shadow">

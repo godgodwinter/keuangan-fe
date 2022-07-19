@@ -83,7 +83,7 @@ const getMonthNamesObj = (frmt = "MMMM") => {
     }
     for (
         let i = 0;
-        i < monthNow;
+        i < 12;//monthNow;
         i++ // Loop from 0 to 12 (exclusive)
     ) {
 

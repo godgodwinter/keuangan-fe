@@ -16,6 +16,7 @@ const dataAsli = computed(() => storeDataTransaksi.getData);
 const data = computed(() => storeDataTransaksi.getDataShow);
 const dataMonthly = computed(() => storeDataTransaksi.getDataShowMonthly);
 const dataRekap = computed(() => storeDataTransaksi.getDataRekap);
+const dataBlnThn = computed(() => storeDataTransaksi.getDataBlnThn);
 
 // const uniqDate= [...new Set(dataAsli.value.map((item) => item.tgl))];
 const dataAsliTgl = ref([]);
@@ -27,20 +28,36 @@ if (dataAsli.value.length < 1) {
 const storeAdmin = useStoreAdmin();
 
 storeAdmin.setPagesActive("transaksi");
+
+dataForm.value.monthyear = dataBlnThn.value.thn;
+
+const doChangeMonth = () => {
+  let m = dataBlnThn.value.bln;
+  let y = dataForm.value.monthyear;
+  let blnthmTemp = {
+    month: m - 1,
+    year: y,
+  };
+  let tempData = {
+    nama: moment(blnthmTemp).format("MMMM YYYY"),
+    bln: moment(blnthmTemp).format("MM"),
+    blnNumber: moment(blnthmTemp).format("Mo"),
+    blnNama: moment(blnthmTemp).format("MMMM"),
+    thn: moment(blnthmTemp).format("YYYY"),
+  };
+  storeDataTransaksi.setDataBlnThn(tempData);
+  ApiTransaksi.getData();
+  //   console.log(blnthmTemp, tempData, dataForm.value.monthyear);
+};
 </script>
 <template>
-  <div class="pt-4 px-5 md:flex justify-between">
-    <div>
-      <!-- {{ data }} -->
-      <!-- {{ Fungsi.getMonthNamesObj() }} -->
-      <!-- {{ monthNow }} -->
-    </div>
-    <div class="md:py-0 py-4 space-x-2 space-y-2">
+  <div class="pt-4 px-5 flex justify-center">
+    <div class="md:py-0 py-4 space-x-2 space-y-2 flex">
       <Datepicker
-        format="yyyy/MM"
-        value-format="yyyy-MM"
+        format="yyyy"
+        value-format="yyyy"
         v-model="dataForm.monthyear"
-        monthPicker
+        yearPicker
         required
       >
         <template #calendar-header="{ index, day }">
@@ -49,6 +66,9 @@ storeAdmin.setPagesActive("transaksi");
           </div>
         </template>
       </Datepicker>
+      <button class="btn btn-sm btn-primary" @click="doChangeMonth()">
+        Pilih
+      </button>
     </div>
   </div>
   <div class="w-full py-6 px-2 flex justify-center shadow">
@@ -84,7 +104,7 @@ storeAdmin.setPagesActive("transaksi");
     <div class="grid grid-cols-4 w-full">
       <div class="grid-cols-1 font-bold border-r-2">
         <div class="flex flex-row space-x-2">
-          <span class="text-2xl">{{ item.nama }}</span>
+          <span class="text-sm lg:text-2xl">{{ item.nama }}</span>
           <div>
             <div>
               <!-- <span>{{ item.nama }}</span> -->
