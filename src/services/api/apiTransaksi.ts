@@ -1,4 +1,5 @@
 import Api from "@/axios/axios";
+import Fungsi from "@/components/lib/FungsiCampur";
 import { useStoreDataTransaksi } from "@/stores/data/dataTransaksi";
 import { ref, computed } from "vue";
 import Toast from "@/components/lib/Toast"
@@ -37,6 +38,8 @@ const fnSetData = () => {
         data.value.push({
             date: item,
             tgl: moment(item).format("DD"),
+            bln: moment(item).format("MM"),
+            thn: moment(item).format("YYYY"),
             blnthn: moment(item).format("MMMM YYYY"),
             week: moment(item).format("dddd"),
             data: dataAsli.value.filter((item2) => item2.tgl === item),
@@ -46,9 +49,73 @@ const fnSetData = () => {
             saldoPerTgl,
         });
     });
-    console.log(data.value);
+    // sort desc tgl
+    data.value.sort((a, b) => {
+        return moment(b.date).unix() - moment(a.date).unix();
+    });
+    // console.log(data.value);
     storeDataTransaksi.setDataShow(data.value);
 };
+
+
+const dataMonthly = ref([]);
+const fnGetDataMonthly = () => {
+    let result = [];
+    Fungsi.getMonthNamesObj().forEach((item, index) => {
+        result.push({
+            index,
+            nama: item.name,
+            number: item.number,
+            string: item.string,
+            pemasukan: 0,
+            pengeluaran: 0,
+            saldoMonthly: 0,
+        });
+    });
+
+    // data.value.filter tgl berdasarkan bulan
+    data.value.forEach((item) => {
+        result.forEach((item2) => {
+            // console.log(item.bln, item2.string, item.bln.includes(item2.string));
+
+            // if (item.tgl.includes(item2.number)) {
+            if (item.bln.includes(item2.string)) {
+                item2.pemasukan += item.sumPemasukan;
+                item2.pengeluaran += item.sumPengeluaran;
+                item2.saldoMonthly = item2.pemasukan - item2.pengeluaran;
+            }
+        });
+    });
+    return result;
+}
+const dataShowYearly = ref([]);
+const fnGetDataYeardataShowYearly = () => {
+    let result = [];
+    Fungsi.getLastYear().forEach((item, index) => {
+        result.push({
+            index,
+            nama: item,
+            pemasukan: 0,
+            pengeluaran: 0,
+            saldoYeardataShowYearly: 0,
+        });
+    });
+
+    // data.value.filter tgl berdasarkan bulan
+    data.value.forEach((item) => {
+        result.forEach((item2) => {
+            // console.log(item.bln, item2.string, item.bln.includes(item2.string));
+
+            // if (item.tgl.includes(item2.number)) {
+            if (item.thn.includes(item2.nama)) {
+                item2.pemasukan += item.sumPemasukan;
+                item2.pengeluaran += item.sumPengeluaran;
+                item2.saldo = item2.pemasukan - item2.pengeluaran;
+            }
+        });
+    });
+    return result;
+}
 
 const getData = async () => {
     try {
@@ -58,7 +125,13 @@ const getData = async () => {
         storeDataTransaksi.setData(res);
         storeDataTransaksi.setDataRekap(resRekap);
         // console.log(res);
-        fnSetData();
+        await fnSetData();
+        let resultMonthly = fnGetDataMonthly();
+        storeDataTransaksi.setDataShowMonthly(resultMonthly);
+        let resultYearly = fnGetDataYeardataShowYearly();
+        storeDataTransaksi.setDataShowYearly(resultYearly);
+        // console.log(resultMonthly);
+
 
         return true;
     } catch (error) {
