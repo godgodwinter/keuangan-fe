@@ -222,7 +222,7 @@ const fnGetDataChart = async (bln = moment().format("MM"), year = moment().forma
             nama: item.kategori_nama,
             nominal: dataAsliDailyPerTahun.value.filter((item2) => item2.kategori_nama === item.kategori_nama).reduce((acc, item3) => acc + parseInt(item3.nominal), 0),
             //     //                
-            persentase: (item.nominal / sumNominalPengeluaran * 100).toFixed(2),
+            persentase: (dataAsliDailyPerTahun.value.filter((item2) => item2.kategori_nama === item.kategori_nama).reduce((acc, item3) => acc + parseInt(item3.nominal), 0) / sumNominalPengeluaran * 100).toFixed(2),
             color: 'c5c5c5',
             bgcolor: `bg-[${'c5c5c5'}]`,
         }
@@ -235,7 +235,7 @@ const fnGetDataChart = async (bln = moment().format("MM"), year = moment().forma
             nama: item.kategori_nama,
             nominal: dataAsliDailyPerTahun.value.filter((item2) => item2.kategori_nama === item.kategori_nama).reduce((acc, item3) => acc + parseInt(item3.nominal), 0),
             //     //                
-            persentase: (item.nominal / sumNominalPemasukan * 100).toFixed(2),
+            persentase: (dataAsliDailyPerTahun.value.filter((item2) => item2.kategori_nama === item.kategori_nama).reduce((acc, item3) => acc + parseInt(item3.nominal), 0) / sumNominalPemasukan * 100).toFixed(2),
             color: 'c5c5c5',
             bgcolor: `bg-[${'c5c5c5'}]`,
         }
