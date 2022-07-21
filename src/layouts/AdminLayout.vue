@@ -20,6 +20,7 @@ const router = useRouter();
 const storeAdminAuth = useStoreAdminAuth();
 const token = computed(() => storeAdminAuth.getToken);
 const isLogin = computed(() => storeAdminAuth.getIsLogin);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 storeAdminAuth.$subscribe((mutation, state) => {});
 
 const resCheckToken: Ref<Promise<boolean>> = ref([]);

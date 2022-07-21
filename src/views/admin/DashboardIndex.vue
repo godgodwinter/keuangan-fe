@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import Fungsi from "@/components/lib/FungsiCampur";
 import { ref, computed } from "vue";
 import ApiTransaksi from "@/services/api/apiTransaksi";
 import { useStoreDataTransaksi } from "@/stores/data/dataTransaksi";
@@ -14,12 +15,16 @@ import { Chart, registerables } from "chart.js";
 Chart.register(...registerables);
 const today = moment().format("DD MMMM YYYY");
 const storeAdmin = useStoreAdmin();
-const dataAsli = ref([]);
+const data = ref([]);
 const storeDataTransaksi = useStoreDataTransaksi();
 
 storeAdmin.setPagesActive("dashboard");
 
+const dataAsli = computed(() => storeDataTransaksi.getData);
+const dataShowDaily = computed(() => storeDataTransaksi.getDataShowDaily);
 const dataBlnThn = computed(() => storeDataTransaksi.getDataBlnThn);
+const dataRekap = computed(() => storeDataTransaksi.getDataRekap);
+
 const dataForm = ref([]);
 dataForm.value.monthyear = {
   month: dataBlnThn.value.blnNumber - 1,
@@ -40,7 +45,7 @@ const doChangeMonth = () => {
   ApiTransaksi.getData();
   // console.log(dataForm.value.monthyear);
 };
-const testData = {
+const testData = ref({
   labels: ["Paris", "Nîmes", "Toulon", "Perpignan", "Autre"],
   datasets: [
     {
@@ -48,7 +53,179 @@ const testData = {
       backgroundColor: ["#77CEFF", "#0079AF", "#123E6B", "#97B0C4", "#A5C8ED"],
     },
   ],
+});
+
+const isRingkasanActive = ref(true);
+const isPengeluaranActive = ref(false);
+const isPemasukanActive = ref(false);
+
+const fnMenuActive = (menu) => {
+  if (menu == "ringkasan") {
+    isRingkasanActive.value = true;
+    isPengeluaranActive.value = false;
+    isPemasukanActive.value = false;
+  } else if (menu == "pengeluaran") {
+    isRingkasanActive.value = false;
+    isPengeluaranActive.value = true;
+    isPemasukanActive.value = false;
+  } else {
+    isRingkasanActive.value = false;
+    isPengeluaranActive.value = false;
+    isPemasukanActive.value = true;
+  }
 };
+
+const doFilterRingakasan = () => {
+  fnMenuActive("ringkasan");
+  fnFilterRingkasan();
+};
+
+const doFilterPengeluaran = () => {
+  fnMenuActive("pengeluaran");
+  fnFilterPengeluaran();
+};
+
+const doFilterPemasukan = () => {
+  fnMenuActive("pemasukan");
+};
+
+const fnResetChart = () => {
+  testData.value.labels = [];
+  testData.value.datasets[0].data = [];
+};
+
+const fnRandomColor = () => {
+  const letters = "0123456789ABCDEF";
+  let color = "#";
+  for (let i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+};
+
+// const testFn = ref([]);
+// testFn.value = dataAsli.value
+//   .filter((item) => item.jenis == "pengeluaran")
+//   .reduce((a, b) => a + b.nominal, 0);
+
+const fnSort = (sort) => {
+  if (sort == "namaasc") {
+    // sort by nama asc
+    console.log("sort by nama asc");
+    data.value.sort((a, b) => {
+      if (a.nama < b.nama) {
+        return -1;
+      }
+      if (a.nama > b.nama) {
+        return 1;
+      }
+      return 0;
+    });
+  } else if (sort == "namadesc") {
+    // sort by nama desc
+    console.log("sort by nama desc");
+
+    data.value.sort((a, b) => {
+      if (a.nama < b.nama) {
+        return 1;
+      }
+      if (a.nama > b.nama) {
+        return -1;
+      }
+      return 0;
+    });
+  } else if (sort == "tersedikit") {
+    data.value.sort((a, b) => {
+      return a.nominal - b.nominal;
+    });
+  } else {
+    data.value.sort((a, b) => {
+      return b.nominal - a.nominal;
+    });
+  }
+  // fnResetChart();
+  // data.value.forEach((item) => {
+  //   testData.value.labels.push(`${item.nama} : ${item.persentase} %`);
+  //   testData.value.datasets[0].data.push(item.nominal);
+  //   testData.value.datasets[0].backgroundColor.push(item.color);
+  // });
+};
+
+dataForm.value.sort = "terbanyak";
+const doSort = () => {
+  //get value from select
+  console.log(dataForm.value.sort);
+  fnSort(dataForm.value.sort);
+};
+// ringkasan
+const fnFilterRingkasan = () => {
+  data.value = [
+    {
+      id: 1,
+      nama: "Pengeluaran",
+      nominal: 8000,
+      persentase: 80,
+      color: fnRandomColor(),
+      bgcolor: `bg-[${fnRandomColor()}]`,
+    },
+    {
+      id: 2,
+      nama: "Pemasukan",
+      nominal: 2000,
+      persentase: 20,
+      color: fnRandomColor(),
+      bgcolor: `bg-[${fnRandomColor()}]`,
+    },
+  ];
+
+  fnSort(dataForm.value.sort);
+
+  fnResetChart();
+  data.value.forEach((item) => {
+    testData.value.labels.push(`${item.nama} : ${item.persentase} %`);
+    testData.value.datasets[0].data.push(item.nominal);
+    testData.value.datasets[0].backgroundColor.push(item.color);
+  });
+};
+
+const fnFilterPengeluaran = () => {
+  data.value = [
+    {
+      id: 1,
+      nama: "Tagihan",
+      nominal: 3000,
+      persentase: 30,
+      color: fnRandomColor(),
+      bgcolor: `bg-[${fnRandomColor()}]`,
+    },
+    {
+      id: 2,
+      nama: "Jajan",
+      nominal: 3000,
+      persentase: 30,
+      color: fnRandomColor(),
+      bgcolor: `bg-[${fnRandomColor()}]`,
+    },
+    {
+      id: 3,
+      nama: "Transportasi",
+      nominal: 4000,
+      persentase: 40,
+      color: fnRandomColor(),
+      bgcolor: `bg-[${fnRandomColor()}]`,
+    },
+  ];
+
+  fnSort(dataForm.value.sort);
+  fnResetChart();
+  data.value.forEach((item) => {
+    testData.value.labels.push(`${item.nama} : ${item.persentase} %`);
+    testData.value.datasets[0].data.push(item.nominal);
+    testData.value.datasets[0].backgroundColor.push(item.color);
+  });
+};
+
+fnFilterRingkasan();
 </script>
 <template>
   <div class="pt-4 px-5 md:flex justify-between">
@@ -60,12 +237,29 @@ const testData = {
       </span>
     </div>
   </div>
+  <!-- {{ dataAsli }} -->
+  {{ data }}
 
   <div class="py-4 px-4">
     <div class="tabs">
-      <a class="tab tab-bordered">Ringkasan</a>
-      <a class="tab tab-bordered tab-active">Pengeluaran</a>
-      <a class="tab tab-bordered">Pemasukan</a>
+      <a
+        class="tab tab-bordered"
+        :class="{ 'tab-active': isRingkasanActive }"
+        @click="doFilterRingakasan()"
+        >Ringkasan</a
+      >
+      <a
+        class="tab tab-bordered"
+        :class="{ 'tab-active': isPengeluaranActive }"
+        @click="doFilterPengeluaran()"
+        >Pengeluaran</a
+      >
+      <a
+        class="tab tab-bordered"
+        :class="{ 'tab-active': isPemasukanActive }"
+        @click="doFilterPemasukan()"
+        >Pemasukan</a
+      >
     </div>
   </div>
 
@@ -112,28 +306,33 @@ const testData = {
               clip-rule="evenodd"
             /></svg
         ></span>
-        <h4 class="font-bold">8 Kategori</h4>
+        <h4 class="font-bold">{{ data.length }} Kategori</h4>
       </div>
       <div>
-        <select class="select select-bordered w-full max-w-xs">
+        <select
+          class="select select-bordered w-full max-w-xs"
+          @change="doSort()"
+          v-model="dataForm.sort"
+        >
           <option disabled>Urutkan?</option>
-          <option>Nama (A-Z)</option>
-          <option>Nama (Z-A)</option>
-          <option selected>Terbanyak</option>
-          <option>Tersedikit</option>
+          <option value="namaasc">Nama (A-Z)</option>
+          <option value="namadesc">Nama (Z-A)</option>
+          <option selected value="terbanyak">Terbanyak</option>
+          <option value="tersedikit">Tersedikit</option>
         </select>
       </div>
     </div>
-    <div class="bg-base-100" v-for="i in 4">
+    <div class="bg-base-100" v-for="(item, index) in data" :key="item.id">
       <div class="py-2">
         <div class="flex justify-between w-full py-4">
-          <div>(70%) Tagihan</div>
-          <div>Rp 200000</div>
+          <div>({{ item.persentase }}%) {{ item.nama }}</div>
+          <div>{{ Fungsi.rupiah(item.nominal) }} {{ item.bgcolor }}</div>
         </div>
         <div>
           <progress
-            class="progress progress-primary w-full"
-            value="70"
+            class="progress w-full"
+            :class="'bg-[#c5c5c5]'"
+            :value="item.persentase"
             max="100"
           ></progress>
         </div>

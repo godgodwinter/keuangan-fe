@@ -9,6 +9,7 @@ const router = useRouter();
 const storeAdminAuth = useStoreAdminAuth();
 const token = computed(() => storeAdminAuth.getToken);
 const isLogin = computed(() => storeAdminAuth.getIsLogin);
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 storeAdminAuth.$subscribe((mutation, state) => {});
 
 const resLogin = ref(false);
