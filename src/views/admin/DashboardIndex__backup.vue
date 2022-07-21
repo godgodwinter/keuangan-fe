@@ -22,8 +22,16 @@ storeAdmin.setPagesActive("dashboard");
 
 const dataAsli = computed(() => storeDataTransaksi.getData);
 const dataShowDaily = computed(() => storeDataTransaksi.getDataShowDaily);
+const dataChart = computed(() => storeDataTransaksi.getDataChart);
 const dataBlnThn = computed(() => storeDataTransaksi.getDataBlnThn);
 const dataRekap = computed(() => storeDataTransaksi.getDataRekap);
+storeDataTransaksi.$subscribe((mutation, state) => {
+  fnFilterRingkasan();
+});
+
+if (dataAsli.value.length < 1) {
+  ApiTransaksi.getData();
+}
 
 const dataForm = ref([]);
 dataForm.value.monthyear = {
@@ -159,24 +167,25 @@ const doSort = () => {
 };
 // ringkasan
 const fnFilterRingkasan = () => {
-  data.value = [
-    {
-      id: 1,
-      nama: "Pengeluaran",
-      nominal: 8000,
-      persentase: 80,
-      color: fnRandomColor(),
-      bgcolor: `bg-[${fnRandomColor()}]`,
-    },
-    {
-      id: 2,
-      nama: "Pemasukan",
-      nominal: 2000,
-      persentase: 20,
-      color: fnRandomColor(),
-      bgcolor: `bg-[${fnRandomColor()}]`,
-    },
-  ];
+  data.value = dataChart.value.ringkasan;
+  // data.value = [
+  //   {
+  //     id: 1,
+  //     nama: "Pengeluaran",
+  //     nominal: 0,
+  //     persentase: 80,
+  //     color: fnRandomColor(),
+  //     bgcolor: `bg-[${fnRandomColor()}]`,
+  //   },
+  //   {
+  //     id: 2,
+  //     nama: "Pemasukan",
+  //     nominal: 0,
+  //     persentase: 20,
+  //     color: fnRandomColor(),
+  //     bgcolor: `bg-[${fnRandomColor()}]`,
+  //   },
+  // ];
 
   fnSort(dataForm.value.sort);
 
@@ -237,8 +246,8 @@ fnFilterRingkasan();
       </span>
     </div>
   </div>
-  <!-- {{ dataAsli }} -->
-  {{ data }}
+  {{ dataRekap }}
+  <!-- {{ data }} -->
 
   <div class="py-4 px-4">
     <div class="tabs">
@@ -325,8 +334,14 @@ fnFilterRingkasan();
     <div class="bg-base-100" v-for="(item, index) in data" :key="item.id">
       <div class="py-2">
         <div class="flex justify-between w-full py-4">
-          <div>({{ item.persentase }}%) {{ item.nama }}</div>
-          <div>{{ Fungsi.rupiah(item.nominal) }} {{ item.bgcolor }}</div>
+          <div>
+            ({{ isNaN(item.persentase) ? 0 : item.persentase }}%)
+            {{ item.nama }}
+          </div>
+          <div>
+            {{ Fungsi.rupiah(item.nominal) }}
+            <!-- {{ item.bgcolor }} -->
+          </div>
         </div>
         <div>
           <progress

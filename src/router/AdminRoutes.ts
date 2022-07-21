@@ -12,7 +12,7 @@ const AdminRoutes: Array<any> = [
             {
                 path: `${prefix}dashboard/index`,
                 name: 'AdminDashboardIndex',
-                component: () => import("@/views/admin/DashboardIndex.vue"),
+                component: () => import("@/views/admin/dashboard/DashboardIndex.vue"),
             },
             {
                 path: `${prefix}profile`,

@@ -9,6 +9,9 @@ moment.updateLocale("id", localization);
 const storeDataTransaksi = useStoreDataTransaksi();
 
 const dataAsli = computed(() => storeDataTransaksi.getData);
+const dataAsliDaily = computed(() => storeDataTransaksi.getDataShowDaily);
+const dataAsliDailyPerTahun = computed(() => storeDataTransaksi.getDataShowDailyPerTahun);
+const dataRekap = computed(() => storeDataTransaksi.getDataRekap);
 const dataBlnThn = computed(() => storeDataTransaksi.getDataBlnThn);
 // const dataShow = computed(() => storeDataTransaksi.getDataShow);
 // const dataShowMonthly = computed(() => storeDataTransaksi.getDataShowMonthly);
@@ -67,6 +70,22 @@ const fnGetDataDaily = (bln = moment().format("MM"), year = moment().format("YYY
         if (item.bln === bln && item.thn === year) {
             result.push(item);
         }
+    });
+
+    return result;
+}
+const fnGetDataDailyPerTahun = (year = moment().format("YYYY")) => {
+    let result = [];
+    // console.log(bln, year);
+    dataAsli.value.forEach((item) => {
+        //  jika tgl sama dengan year maka push
+        if (item.tgl.includes(year)) {
+            result.push(item);
+        }
+
+        // if (item.thn === year) {
+        //     result.push(item);
+        // }
     });
 
     return result;
@@ -150,6 +169,91 @@ const fnGetDataShowYearly = () => {
     return result;
 }
 
+const fnGetDataChart = async (bln = moment().format("MM"), year = moment().format("YYYY")) => {
+    let jml = dataRekap.value.pengeluaran + dataRekap.value.pemasukan;
+    let persentase = {
+        // dua angka dibelakan koma
+        pemasukan: (dataRekap.value.pemasukan / jml * 100).toFixed(2),
+        pengeluaran: (dataRekap.value.pengeluaran / jml * 100).toFixed(2)
+    }
+
+    let ringkasan = [
+        {
+            id: 1,
+            nama: "Pengeluaran",
+            nominal: dataRekap.value.pengeluaran,
+            persentase: persentase.pengeluaran,
+            color: 'c5c5c5',
+            bgcolor: `bg-[${'c5c5c5'}]`,
+        },
+        {
+            id: 2,
+            nama: "Pemasukan",
+            nominal: dataRekap.value.pemasukan,
+            persentase: persentase.pemasukan,
+            color: 'c5c5c5',
+            bgcolor: `bg-[${'c5c5c5'}]`,
+        }
+    ];
+
+    // console.log(dataAsliDailyPerTahun.value);
+    let pengeluaran = [];
+    let pemasukan = [];
+    // filter uniq kategori_nama dan kategori_id
+    let kategori_nama = dataAsliDailyPerTahun.value.filter((item, index) => {
+        return dataAsliDailyPerTahun.value.findIndex((item2) => {
+            return item.kategori_nama === item2.kategori_nama && item.kategori_id === item2.kategori_id && item.jenis === "Pengeluaran";;
+        }
+        ) === index;
+    });
+    let kategori_namaPemasukan = dataAsliDailyPerTahun.value.filter((item, index) => {
+        return dataAsliDailyPerTahun.value.findIndex((item2) => {
+            return item.kategori_nama === item2.kategori_nama && item.kategori_id === item2.kategori_id && item.jenis === "Pemasukan";;
+        }
+        ) === index;
+    });
+
+    let sumNominalPengeluaran = dataRekap.value.pengeluaran;
+    let sumNominalPemasukan = dataRekap.value.pemasukan;
+
+    kategori_nama.forEach((item) => {
+        let obj = {
+            id: item.kategori_id,
+            nama: item.kategori_nama,
+            nominal: dataAsliDailyPerTahun.value.filter((item2) => item2.kategori_nama === item.kategori_nama).reduce((acc, item3) => acc + parseInt(item3.nominal), 0),
+            //     //                
+            persentase: (item.nominal / sumNominalPengeluaran * 100).toFixed(2),
+            color: 'c5c5c5',
+            bgcolor: `bg-[${'c5c5c5'}]`,
+        }
+        // console.log(obj.nominal);
+        pengeluaran.push(obj);
+    });
+    kategori_namaPemasukan.forEach((item) => {
+        let objPemasukan = {
+            id: item.kategori_id,
+            nama: item.kategori_nama,
+            nominal: dataAsliDailyPerTahun.value.filter((item2) => item2.kategori_nama === item.kategori_nama).reduce((acc, item3) => acc + parseInt(item3.nominal), 0),
+            //     //                
+            persentase: (item.nominal / sumNominalPemasukan * 100).toFixed(2),
+            color: 'c5c5c5',
+            bgcolor: `bg-[${'c5c5c5'}]`,
+        }
+        // console.log(objPemasukan.nominal);
+        pemasukan.push(objPemasukan);
+    });
+
+
+    let result = {
+        ringkasan,
+        pengeluaran: pengeluaran,
+        pemasukan: pemasukan,
+    };
+
+    storeDataTransaksi.setDataChart(result);
+    return result;
+}
+
 const getData = async () => {
     try {
         const response = await Api.get(`admin/transaksi`);
@@ -165,12 +269,17 @@ const getData = async () => {
         storeDataTransaksi.setDataShowMonthly(resultMonthly);
         const resultYearly = fnGetDataShowYearly();
         storeDataTransaksi.setDataShowYearly(resultYearly);
+        const resultDailyPerTahun = fnGetDataDailyPerTahun(dataBlnThn.value.thn);// YYYY
+        storeDataTransaksi.setDataShowDailyPerTahun(resultDailyPerTahun);
         const resultDaily = fnGetDataDaily(dataBlnThn.value.bln, dataBlnThn.value.thn);//MM YYYY
         storeDataTransaksi.setDataShowDaily(resultDaily);
         const resultRekapYearly = fnGetDataRekapYearly(dataBlnThn.value.thn);
         storeDataTransaksi.setDataRekap(resultRekapYearly);
+        fnGetDataChart();
+        // const resultChart = await fnGetDataChart(dataBlnThn.value.bln, dataBlnThn.value.thn);
+        // storeDataTransaksi.setDataChart(resultChart);
 
-        // console.log(resultMonthly);
+        // console.log(resultChart);
 
 
         return true;
@@ -285,6 +394,7 @@ const ApiTransaksi = {
     deleteData,
     getDataId,
     doUpdate,
-    doStoreData
+    doStoreData,
+    fnGetDataChart
 };
 export default ApiTransaksi;
