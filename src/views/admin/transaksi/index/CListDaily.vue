@@ -16,6 +16,7 @@ const dataAsli = computed(() => storeDataTransaksi.getData);
 const data = computed(() => storeDataTransaksi.getDataShowDaily);
 const dataBlnThn = computed(() => storeDataTransaksi.getDataBlnThn);
 const dataRekap = computed(() => storeDataTransaksi.getDataRekap);
+const dataRekapBln = computed(() => storeDataTransaksi.getDataRekapBln);
 
 // const uniqDate= [...new Set(dataAsli.value.map((item) => item.tgl))];
 const dataAsliTgl = ref([]);
@@ -109,21 +110,27 @@ const doChangeMonth = () => {
       <div>
         <div class="font-bold">Pemasukan</div>
         <div class="text-sky-600">
-          {{ Fungsi.rupiah(dataRekap.pemasukan ? dataRekap.pemasukan : 0) }}
+          {{
+            Fungsi.rupiah(dataRekapBln.pemasukan ? dataRekapBln.pemasukan : 0)
+          }}
         </div>
       </div>
 
       <div class="">
         <div class="font-bold">Pengeluaran</div>
         <div class="text-red-600">
-          {{ Fungsi.rupiah(dataRekap.pengeluaran ? dataRekap.pengeluaran : 0) }}
+          {{
+            Fungsi.rupiah(
+              dataRekapBln.pengeluaran ? dataRekapBln.pengeluaran : 0
+            )
+          }}
         </div>
       </div>
 
       <div class="">
         <div class="font-bold">Saldo</div>
         <div class="text-primary-content">
-          {{ Fungsi.rupiah(dataRekap.saldo ? dataRekap.saldo : 0) }}
+          {{ Fungsi.rupiah(dataRekapBln.saldo ? dataRekapBln.saldo : 0) }}
         </div>
       </div>
     </div>

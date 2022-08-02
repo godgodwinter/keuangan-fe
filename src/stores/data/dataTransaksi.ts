@@ -39,7 +39,8 @@ export const useStoreDataTransaksi = defineStore({
     dataShowDailyPerTahun: [], //thn
     dataShowMonthly: [], //bln+thn
     dataShowYearly: [],
-    dataRekap: [],//bln+thn
+    dataRekap: [],//thn
+    dataRekapBln: [],//bln+thn
     dataRekapAll: [], //all
   }),
   getters: {
@@ -51,7 +52,8 @@ export const useStoreDataTransaksi = defineStore({
     getDataShowDailyPerTahun: (state) => state.dataShowDailyPerTahun,
     getDataShowMonthly: (state) => state.dataShowMonthly,
     getDataShowYearly: (state) => state.dataShowYearly,
-    getDataRekap: (state) => state.dataRekap, //bln+thn
+    getDataRekap: (state) => state.dataRekap, //thn
+    getDataRekapBln: (state) => state.dataRekapBln, //bln+thn
     getDataRekapAll: (state) => state.dataRekapAll,
   },
   actions: {
@@ -81,6 +83,9 @@ export const useStoreDataTransaksi = defineStore({
     },
     setDataRekap(dataRekap: string[]): void {
       this.dataRekap = dataRekap;
+    },
+    setDataRekapBln(dataRekapBln: string[]): void {
+      this.dataRekapBln = dataRekapBln;
     },
     setDataRekapAll(dataRekapAll: string[]): void {
       this.dataRekapAll = dataRekapAll;

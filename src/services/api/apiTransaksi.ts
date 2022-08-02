@@ -108,6 +108,26 @@ const fnGetDataRekapYearly = (year = moment().format("YYYY")) => {
     });
     return result;
 }
+const fnGetDataRekapMonthly = (bln = moment().format("MM"), year = moment().format("YYYY")) => {
+    let result = {
+        pemasukan: 0,
+        pengeluaran: 0,
+        saldo: 0,
+    };
+
+    data.value.forEach((item) => {
+        // if (item.tgl.includes(item2.number)) {
+        // if ((item.thn).includes((year))) {
+        if (item.bln === bln && item.thn === year) {
+            result.pemasukan += item.sumPemasukan;
+            result.pengeluaran += item.sumPengeluaran;
+            result.saldo = result.pemasukan - result.pengeluaran;
+        }
+    });
+    console.log(result);
+
+    return result;
+}
 
 
 const dataMonthly = ref([]);
@@ -275,6 +295,8 @@ const getData = async () => {
         storeDataTransaksi.setDataShowDaily(resultDaily);
         const resultRekapYearly = fnGetDataRekapYearly(dataBlnThn.value.thn);
         storeDataTransaksi.setDataRekap(resultRekapYearly);
+        const resultRekapMonthly = fnGetDataRekapMonthly(dataBlnThn.value.bln, dataBlnThn.value.thn);
+        storeDataTransaksi.setDataRekapBln(resultRekapMonthly);
         fnGetDataChart();
         // const resultChart = await fnGetDataChart(dataBlnThn.value.bln, dataBlnThn.value.thn);
         // storeDataTransaksi.setDataChart(resultChart);
