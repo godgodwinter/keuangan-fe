@@ -11,7 +11,7 @@ import localization from "moment/locale/id";
 moment.updateLocale("id", localization);
 const today = moment().format("DD MMMM YYYY");
 const storeDataTransaksi = useStoreDataTransaksi();
-storeDataTransaksi.$subscribe((mutation, state) => {});
+storeDataTransaksi.$subscribe((mutation, state) => { });
 const dataAsli = computed(() => storeDataTransaksi.getData);
 const data = computed(() => storeDataTransaksi.getDataShowDaily);
 const dataBlnThn = computed(() => storeDataTransaksi.getDataBlnThn);
@@ -87,13 +87,7 @@ const doChangeMonth = () => {
       <!-- {{ dataRekap }} -->
     </div>
     <div class="pt-4 px-5 flex justify-center">
-      <Datepicker
-        format="MMMM yyyy"
-        value-format="yyyy-MM"
-        v-model="dataForm.monthyear"
-        monthPicker
-        required
-      >
+      <Datepicker format="MMMM yyyy" value-format="yyyy-MM" v-model="dataForm.monthyear" monthPicker required>
         <template #calendar-header="{ index, day }">
           <div :class="index === 5 || index === 6 ? 'red-color' : ''">
             {{ day }}
@@ -111,7 +105,7 @@ const doChangeMonth = () => {
         <div class="font-bold">Pemasukan</div>
         <div class="text-sky-600">
           {{
-            Fungsi.rupiah(dataRekapBln.pemasukan ? dataRekapBln.pemasukan : 0)
+          Fungsi.rupiah(dataRekapBln.pemasukan ? dataRekapBln.pemasukan : 0)
           }}
         </div>
       </div>
@@ -120,9 +114,9 @@ const doChangeMonth = () => {
         <div class="font-bold">Pengeluaran</div>
         <div class="text-red-600">
           {{
-            Fungsi.rupiah(
-              dataRekapBln.pengeluaran ? dataRekapBln.pengeluaran : 0
-            )
+          Fungsi.rupiah(
+          dataRekapBln.pengeluaran ? dataRekapBln.pengeluaran : 0
+          )
           }}
         </div>
       </div>
@@ -136,10 +130,7 @@ const doChangeMonth = () => {
     </div>
   </div>
 
-  <div
-    class="w-full py-4 flex-col justify-center px-4 space-y-4 shadow-md"
-    v-for="(item, index) in data"
-  >
+  <div class="w-full py-4 flex-col justify-center px-4 space-y-4 shadow-md" v-for="(item, index) in data">
     <!-- head -->
     <div class="grid grid-cols-3 w-full">
       <div class="grid-cols-1 font-bold border-r-2">
@@ -162,26 +153,15 @@ const doChangeMonth = () => {
     </div>
     <!-- head -->
     <!-- content -->
-    <div
-      class="grid grid-cols-3 w-full"
-      v-for="(subItem, subItemIndex) in item.data"
-    >
+    <div class="grid grid-cols-3 w-full" v-for="(subItem, subItemIndex) in item.data">
       <div class="grid-cols-1 border-r-2 flex space-x-2">
         <button
           class="bg-transparent hover:bg-gray-200 text-danger font-semibold hover:text-danger-content border border-danger hover:border-danger py-2 px-2 rounded"
-          @click="doDeleteData(subItem.id, subItemIndex)"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5 fill-current"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-          >
-            <path
-              fill-rule="evenodd"
+          @click="doDeleteData(subItem.id, subItemIndex)">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 fill-current" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd"
               d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-              clip-rule="evenodd"
-            />
+              clip-rule="evenodd" />
           </svg>
         </button>
         <span>{{ subItem.kategori_nama }}</span>
@@ -189,14 +169,10 @@ const doChangeMonth = () => {
       <div class="border-r-2 px-2">
         <span>{{ subItem.nama }}</span>
       </div>
-      <div
-        class="text-right hover:underline"
-        @click="doEditData(subItem.id, subItemIndex)"
-        :class="{
-          'text-red-600': subItem.jenis == 'Pengeluaran',
-          'text-sky-600': subItem.jenis == 'Pemasukan',
-        }"
-      >
+      <div class="text-right hover:underline" @click="doEditData(subItem.id, subItemIndex)" :class="{
+        'text-red-600': subItem.jenis == 'Pengeluaran',
+        'text-sky-600': subItem.jenis == 'Pemasukan',
+      }">
         {{ Fungsi.rupiah(subItem.nominal ? subItem.nominal : 0) }}
       </div>
     </div>

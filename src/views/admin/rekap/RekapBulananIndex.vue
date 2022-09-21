@@ -18,16 +18,15 @@ const storeAdmin = useStoreAdmin();
 const data = ref([]);
 const storeDataTransaksi = useStoreDataTransaksi();
 
-storeAdmin.setPagesActive("dashboard");
+storeAdmin.setPagesActive("rekap");
 
 const dataAsli = computed(() => storeDataTransaksi.getData);
-const dataShowDaily = computed(() => storeDataTransaksi.getDataShowDaily);
 const dataAsliDailyPerTahun = computed(
   () => storeDataTransaksi.getDataShowDailyPerTahun
 );
-const dataChart = computed(() => storeDataTransaksi.getDataChart);
+const dataChart = computed(() => storeDataTransaksi.getDataChartPerBulan);
+// dataChartMonthly
 const dataBlnThn = computed(() => storeDataTransaksi.getDataBlnThn);
-const dataRekap = computed(() => storeDataTransaksi.getDataRekap);
 storeDataTransaksi.$subscribe((mutation, state) => {
   // fnFilterRingkasan();
   fnFilterPengeluaran();
@@ -35,9 +34,9 @@ storeDataTransaksi.$subscribe((mutation, state) => {
   console.log(dataChart.value);
 });
 
-if (dataAsli.value.length < 1) {
-  ApiTransaksi.getData();
-}
+// if (dataAsli.value.length < 1) {
+ApiTransaksi.getDataRekapMonthly();
+// }
 
 const dataForm = ref([]);
 dataForm.value.monthyear = {
@@ -45,24 +44,20 @@ dataForm.value.monthyear = {
   year: dataBlnThn.value.thn,
 };
 
-dataForm.value.monthyear = dataBlnThn.value.thn;
+// dataForm.value.monthyear = dataBlnThn.value.thn;
 const doChangeMonth = () => {
-  let m = dataBlnThn.value.bln;
-  let y = dataForm.value.monthyear;
-  let blnthmTemp = {
-    month: m - 1,
-    year: y,
-  };
+  let m = dataForm.value.monthyear.month;
+  let y = dataForm.value.monthyear.year;
   let tempData = {
-    nama: moment(blnthmTemp).format("MMMM YYYY"),
-    bln: moment(blnthmTemp).format("MM"),
-    blnNumber: moment(blnthmTemp).format("Mo"),
-    blnNama: moment(blnthmTemp).format("MMMM"),
-    thn: moment(blnthmTemp).format("YYYY"),
+    nama: moment(dataForm.value.monthyear).format("MMMM YYYY"),
+    bln: moment(dataForm.value.monthyear).format("MM"),
+    blnNumber: moment(dataForm.value.monthyear).format("Mo"),
+    blnNama: moment(dataForm.value.monthyear).format("MMMM"),
+    thn: moment(dataForm.value.monthyear).format("YYYY"),
   };
   storeDataTransaksi.setDataBlnThn(tempData);
-  ApiTransaksi.getData();
-  //   console.log(blnthmTemp, tempData, dataForm.value.monthyear);
+  ApiTransaksi.getDataRekapMonthly(tempData.bln, tempData.thn);
+  console.log(dataForm.value.monthyear);
 };
 const testData = ref({
   labels: ["Paris", "Nîmes", "Toulon", "Perpignan", "Autre"],
@@ -268,7 +263,7 @@ fnFilterRingkasan();
   <div class="pt-4 px-5 md:flex justify-between">
     <div>
       <span class="text-2xl sm:text-3xl leading-none font-bold text-base-content shadow-sm">
-        Dashboard
+        REKAP BULANAN
       </span>
     </div>
   </div>
@@ -287,11 +282,10 @@ fnFilterRingkasan();
     </div>
   </div>
 
-  <!-- {{ dataChart }} -->
   <div class="pt-4 px-5 md:flex justify-between">
     <div></div>
     <div class="pt-4 px-5 flex justify-center">
-      <Datepicker format="yyyy" value-format="yyyy" v-model="dataForm.monthyear" yearPicker required>
+      <Datepicker format="MMMM yyyy" value-format="yyyy-MM" v-model="dataForm.monthyear" monthPicker required>
         <template #calendar-header="{ index, day }">
           <div :class="index === 5 || index === 6 ? 'red-color' : ''">
             {{ day }}
@@ -303,7 +297,7 @@ fnFilterRingkasan();
       </button>
     </div>
   </div>
-
+  <!-- {{ dataChart }} -->
   <div class="py-4 px-4">
     <div class="bg-gray-100 p-1 rounded-lg">
       <DoughnutChart :chartData="testData" />

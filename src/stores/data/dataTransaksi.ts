@@ -34,6 +34,26 @@ export const useStoreDataTransaksi = defineStore({
       pengeluaran: [],
       pemasukan: [],
     },
+    dataChartPerBulan: {
+      ringkasan: [{
+        id: 1,
+        nama: "Pengeluaran",
+        nominal: 0,
+        persentase: 0,
+        color: 'c5c5c5',
+        bgcolor: `bg-[${'c5c5c5'}]`,
+      },
+      {
+        id: 2,
+        nama: "Pemasukan",
+        nominal: 0,
+        persentase: 0,
+        color: 'c5c5c5',
+        bgcolor: `bg-[${'c5c5c5'}]`,
+      },],
+      pengeluaran: [],
+      pemasukan: [],
+    },
     dataShow: [], //all
     dataShowDaily: [], //bln+thn
     dataShowDailyPerTahun: [], //thn
@@ -42,11 +62,14 @@ export const useStoreDataTransaksi = defineStore({
     dataRekap: [],//thn
     dataRekapBln: [],//bln+thn
     dataRekapAll: [], //all
+    // baru
+    dataRekapMonthly: [], //bln+thn
   }),
   getters: {
     getData: (state) => state.data,
     getDataBlnThn: (state) => state.dataBlnThn,
     getDataChart: (state) => state.dataChart,
+    getDataChartPerBulan: (state) => state.dataChartPerBulan,
     getDataShow: (state) => state.dataShow,
     getDataShowDaily: (state) => state.dataShowDaily,
     getDataShowDailyPerTahun: (state) => state.dataShowDailyPerTahun,
@@ -65,6 +88,9 @@ export const useStoreDataTransaksi = defineStore({
     },
     setDataChart(dataChart: string[]): void {
       this.dataChart = dataChart;
+    },
+    setDataChartPerBulan(dataChartPerBulan: string[]): void {
+      this.dataChartPerBulan = dataChartPerBulan;
     },
     setDataShow(dataShow: string[]): void {
       this.dataShow = dataShow;

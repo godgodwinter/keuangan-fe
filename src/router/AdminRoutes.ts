@@ -15,6 +15,11 @@ const AdminRoutes: Array<any> = [
                 component: () => import("@/views/admin/dashboard/DashboardIndex.vue"),
             },
             {
+                path: `${prefix}rekap/bulanan`,
+                name: 'AdminRekapBulanan',
+                component: () => import("@/views/admin/rekap/RekapBulananIndex.vue"),
+            },
+            {
                 path: `${prefix}profile`,
                 name: 'AdminProfile',
                 component: () => import("@/views/admin/profile/ProfileIndex.vue"),
