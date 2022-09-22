@@ -432,6 +432,23 @@ const getDataRekapMonthly = async (bln = moment().format("MM"), year = moment().
         console.error(error);
     }
 };
+const getDataRekapMonthlyPerKategori = async (kategori_id,bln = moment().format("MM"), year = moment().format("YYYY")) => {
+    try {
+        // console.log('====================================');
+        // console.log(bln,year);
+        // console.log('====================================');
+        const response = await Api.get(`admin/rekap/kategori/${kategori_id}?month=${bln}&year=${year}`);
+        const res = response;
+        // const res = JSON.stringify(response);
+        // console.log("hasil: "+JSON.stringify(res));
+        // fnGetDataChartPerBulan(res);
+        
+        return res;
+    } catch (error) {
+        console.error(error);
+    }
+};
+
 
 const doStoreData = async (data: any[]) => {
     let dataForm = {
@@ -541,6 +558,7 @@ const ApiTransaksi = {
     doUpdate,
     doStoreData,
     fnGetDataChart,
-    getDataRekapMonthly
+    getDataRekapMonthly,
+    getDataRekapMonthlyPerKategori
 };
 export default ApiTransaksi;

@@ -34,9 +34,9 @@ storeDataTransaksi.$subscribe((mutation, state) => {
   console.log(dataChart.value);
 });
 
-// if (dataAsli.value.length < 1) {
-ApiTransaksi.getDataRekapMonthly();
-// }
+if (dataBlnThn.value) {
+  ApiTransaksi.getDataRekapMonthly(dataBlnThn.value.bln, dataBlnThn.value.thn);
+}
 
 const dataForm = ref([]);
 dataForm.value.monthyear = {
@@ -327,8 +327,12 @@ fnFilterRingkasan();
       <div class="py-2">
         <div class="flex justify-between w-full py-4">
           <div>
-            ({{ isNaN(item.persentase) ? 0 : item.persentase }}%)
-            {{ item.nama }}
+
+            <router-link
+              :to="{ name: 'AdminRekapBulananPerKategori' ,params:{id:item.id,thn:dataBlnThn.thn,bln:dataBlnThn.bln}}">
+              ({{ isNaN(item.persentase) ? 0 : item.persentase }}%)
+              {{ item.nama }}
+            </router-link>
           </div>
           <div>
             {{ Fungsi.rupiah(item.nominal) }}
